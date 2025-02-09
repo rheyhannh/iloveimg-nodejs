@@ -72,8 +72,11 @@ const result = await task.download(); // Array Buffer
 ```js
 import ILoveIMGApi from './src/iloveimg/ILoveIMGApi.js';
 
+// Project secretKey required otherwise listTasks() will throw an Error.
 const iloveimg = new ILoveIMGApi('publicKey', 'secretKey');
-const tasks = iloveimg.newTask('convertimage');
+
+// See available optional parameters https://www.iloveapi.com/docs/api-reference#task
+const tasks = await iloveimg.listTasks({});
 
 // See https://www.iloveapi.com/docs/api-reference#webhooks at Task response example on data.task
 console.log(tasks[0]);
@@ -124,7 +127,6 @@ const task = iloveimg.newTask('upscaleimage');
 
 // You need to call start() first otherwise it will return undefined.
 await task.start();
-
 console.log(task.getTaskId()); // ex:'taskid'
 ```
 
@@ -149,7 +151,6 @@ const task = iloveimg.newTask('upscaleimage');
 
 // You need to call start() first otherwise it will return undefined.
 await task.start();
-
 console.log(task.getRemainingFiles()); // ex:2320
 ```
 
