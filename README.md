@@ -16,7 +16,7 @@ A Node.js library for interacting with the [ILoveIMG API](https://www.iloveapi.c
 
 ## 📌 When Should You Use This Library?  
 Use this library if:  
-- You need to integrate ILoveIMG’s image services into a **Node.js** application.  
+- You need to integrate ILoveApi’s image services into a **Node.js** application.  
 - Your project follows **ES Module (ESM)** syntax (`import`), not CommonJS (`require`).
 - You want **strong type definitions** and **clear documentation** in your code editor to simplify development.  
 
@@ -50,7 +50,7 @@ task.start()
       return task.process();
   })
   .then(({ download_filename, filesize, output_filesize, output_filenumber, output_extensions, timer, status }) => {
-      return task.download(); // Array Buffer
+      return task.download(); // AxiosResponse
   });
 ```
 
@@ -65,7 +65,7 @@ await task.start();
 await task.addFile({ cloud_file: 'https://i.imgur.com/awesome.jpeg', filename: 'awesome.jpeg' });
 await task.process();
 
-const result = await task.download(); // Array Buffer
+const result = await task.download(); // AxiosResponse
 ```
 
 ### List project tasks
@@ -211,7 +211,7 @@ await task.process(options, toolOptions);
 
 **Example: Debugging API Requests**
 
-ILoveApi provides a [debug](https://www.iloveapi.com/docs/api-reference#testing) mode that allows you to inspect each request sent to their servers. This is particularly useful for testing and understanding what data is being transmitted, such as request bodies, parameters, and other values.
+ILoveApi's provides a [debug](https://www.iloveapi.com/docs/api-reference#testing) mode that allows you to inspect each request sent to their servers. This is particularly useful for testing and understanding what data is being transmitted, such as request bodies, parameters, and other values.
 
 **Important**
 - When using debug mode, the API does not actually process your request.
@@ -261,6 +261,43 @@ After calling `start()`, let's assume the task ID are `loremipsumdolor` and is a
 
 ```http
 DELETE https://api8g.iloveimg.com/v1/task/loremipsumdolor
+```
+
+### Task Module
+When your application integrates with a [webhook system](https://www.iloveapi.com/docs/api-reference#webhooks), ILoveApi's servers will notify your webhook once a task has been processed. In such cases, you may need to download the processed file or retrieve task details for a specific task ID and its assigned server. To streamline this process, you can use the `Task` module, which provides functionality to download processed files and fetch task details effortlessly.
+
+**Example: Downloading a Processed File for a Specific Task ID and Server**
+```js
+import { Task } from './src/iloveimg/ILoveIMGApi.js';
+
+const task = new Task('publicKey', 'secretKey', 'taskId', 'taskServer');
+
+const result = await task.download(); // AxiosResponse
+```
+
+**Example: Retrieve Task Details for a Specific Task ID and Server**
+```js
+import { Task } from './src/iloveimg/ILoveIMGApi.js';
+
+const task = new Task('publicKey', 'secretKey', 'taskId', 'taskServer');
+
+const details = await task.details();
+```
+
+### Auth Module
+If you prefer to use a custom HTTP client like [Got](https://www.npmjs.com/package/got), [Needle](https://www.npmjs.com/package/needle), or another library instead of our built-in Axios-based method, you'll need a way to handle authentication separately. The `Auth` module helps manage authentication by issuing, verifying, and refreshing tokens required for requests to the `ILoveApi` servers.
+
+**Example: Using Auth Module**
+```js
+import { Auth } from './src/iloveimg/ILoveIMGApi.js';
+
+const auth = new Auth('publicKey', 'secretKey');
+
+const token = await auth.getToken(); // JWT
+const payload = auth.verifyToken(); // JWT Payload
+
+// Use the token when making requests to the `ILoveApi` server.
+// Include it in the `Authorization` header with the 'Bearer' prefix.
 ```
 
 ## 🔮 Whats Next
