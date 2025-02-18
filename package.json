@@ -1,6 +1,11 @@
 {
   "name": "@rheyhannh/iloveimg-nodejs",
   "version": "1.0.0",
+  "private": "false",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "description": "A Node.js library for interacting with the ILoveIMG API.",
   "main": "lib/index.js",
   "type": "module",
