@@ -7,6 +7,7 @@ import axios from 'axios';
 import jsonwebtoken from 'jsonwebtoken';
 import Auth from '../src/Auth.js';
 import { ILoveApiError, NetworkError } from '../src/Error.js';
+import { ZodError } from 'zod';
 import config from '../src/config/global.js';
 
 use(chaiAsPromised);
@@ -16,7 +17,6 @@ const { ILOVEIMG_API_URL_PROTOCOL, ILOVEIMG_API_URL, ILOVEIMG_API_VERSION } =
 
 const ILOVEAPI_PUBLIC_KEY = process.env.ILOVEAPI_PUBLIC_KEY || '';
 const ILOVEAPI_SECRET_KEY = process.env.ILOVEAPI_SECRET_KEY || '';
-const APP_API_URL = 'api.ilovepdf.com';
 
 describe('ILoveIMGApi Auth Tests', function () {
 	const publicKey = ILOVEAPI_PUBLIC_KEY;
@@ -78,6 +78,7 @@ describe('ILoveIMGApi Auth Tests', function () {
 	});
 
 	it('should generate a correct self-signed authentication token when secretKey is provided using getToken call', async function () {
+		jwtInstance = new Auth(publicKey, secretKey, { iss: 'mydomain.com' });
 		const verifyTokenSpy = sinon.spy(jwtInstance, 'verifyToken');
 		const getTokenSpy = sinon.spy(jwtInstance, 'getToken');
 
@@ -87,7 +88,7 @@ describe('ILoveIMGApi Auth Tests', function () {
 
 		const { iss, jti } = jsonwebtoken.decode(token);
 		expect(token).to.be.a('string');
-		expect(iss).eq(APP_API_URL);
+		expect(iss).eq('mydomain.com');
 		expect(jti).eq(publicKey);
 	});
 
@@ -140,6 +141,7 @@ describe('ILoveIMGApi Auth Tests', function () {
 	});
 
 	it('should generate correct new self-signed authentication token when expired using getToken call', async function () {
+		jwtInstance = new Auth(publicKey, secretKey, { iss: 'awesome.com' });
 		const verifyTokenSpy = sinon.spy(jwtInstance, 'verifyToken');
 		const getTokenSpy = sinon.spy(jwtInstance, 'getToken');
 
@@ -154,7 +156,7 @@ describe('ILoveIMGApi Auth Tests', function () {
 
 		const { iss, jti } = jsonwebtoken.decode(newToken);
 		expect(newToken).to.be.a('string');
-		expect(iss).to.equal(APP_API_URL);
+		expect(iss).to.equal('awesome.com');
 		expect(jti).to.equal(publicKey);
 	});
 
@@ -162,6 +164,7 @@ describe('ILoveIMGApi Auth Tests', function () {
 		// This test verifies that our self-signed authentication token is valid and accepted by the ILoveApi server.
 		this.timeout(7500);
 
+		jwtInstance = new Auth(publicKey, secretKey, { iss: 'api.projects.com' });
 		const verifyTokenSpy = sinon.spy(jwtInstance, 'verifyToken');
 		const getTokenSpy = sinon.spy(jwtInstance, 'getToken');
 
@@ -171,7 +174,7 @@ describe('ILoveIMGApi Auth Tests', function () {
 
 		const { iss, jti } = jsonwebtoken.decode(token);
 		expect(token).to.be.a('string');
-		expect(iss).eq(APP_API_URL);
+		expect(iss).eq('api.projects.com');
 		expect(jti).eq(publicKey);
 
 		const response = await axios.get('/start/upscaleimage', {
@@ -427,11 +430,5 @@ describe('ILoveIMGApi Auth Tests', function () {
 				setup.expectedData[i]
 			);
 		}
-	});
-
-	it('should throw Error if file encryption key is invalid', function () {
-		expect(
-			() => new Auth(publicKey, secretKey, { file_encryption_key: 'invalid' })
-		).to.throw(Error, 'Encryption key should have 14, 16, or 32 characters.');
 	});
 });

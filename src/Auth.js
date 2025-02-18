@@ -2,11 +2,10 @@ import axios from 'axios';
 import jsonwebtoken from 'jsonwebtoken';
 import config from './config/global.js';
 import { classifyError } from './Error.js';
+import * as Schema from './schema/Auth.js';
 
 const { ILOVEIMG_API_URL, ILOVEIMG_API_URL_PROTOCOL, ILOVEIMG_API_VERSION } =
 	config;
-
-const APP_API_URL = 'api.ilovepdf.com';
 
 /**
  * The `Auth` class manages authentication with the `ILoveApi` server, providing methods
@@ -45,24 +44,23 @@ class Auth {
 	 * Projects secret key.
 	 * @private Internal usage only.
 	 */
-	#secretKey = /** @type {string | undefined} */ (undefined);
-	/**
-	 * File encryption key.
-	 * @private Internal usage only.
-	 */
-	#file_encryption_key;
+	#secretKey;
 	/**
 	 * `AxiosInstance` to make requests to the server.
 	 * @private Internal usage only.
 	 */
 	#axiosInstance;
+	/**
+	 * Self signed token options.
+	 * @private Internal usage only.
+	 */
+	#tokenOptions;
 
 	/**
 	 * Creates an instance that issuing, verify and refresh the JWT used to `ILoveApi` server.
 	 * @param {string} publicKey Projects public key used for authentication, obtained from {@link https://www.iloveapi.com/user/projects here}.
 	 * @param {string} [secretKey=''] Projects secret key used for local token generation, obtained from {@link https://www.iloveapi.com/user/projects here}.
-	 * @param {Object} [params={}] Additional parameters.
-	 * @param {string} [params.file_encryption_key] Encryption key for files.
+	 * @param {Schema.SelfSignedTokenOptionsInfered} [params={}] Additional parameters.
 	 * @example
 	 * ```js
 	 * import { Auth } from '@rheyhannh/iloveimg-nodejs';
@@ -90,22 +88,7 @@ class Auth {
 		});
 		this.#publicKey = publicKey;
 		this.#secretKey = secretKey;
-		this.#file_encryption_key = params.file_encryption_key;
-		this.validateFileEncryptionKey(this.#file_encryption_key);
-	}
-
-	/**
-	 * Validates the file encryption key length.
-	 * @param {string} fileEncryptionKey The encryption key to validate.
-	 * @throws {Error} If the key length is not 14, 16, or 32 characters.
-	 */
-	validateFileEncryptionKey(fileEncryptionKey) {
-		if (
-			typeof fileEncryptionKey === 'string' &&
-			![14, 16, 32].includes(fileEncryptionKey.length)
-		) {
-			throw new Error('Encryption key should have 14, 16, or 32 characters.');
-		}
+		this.#tokenOptions = Schema.SelfSignedTokenOptions.parse(params);
 	}
 
 	/**
@@ -198,12 +181,12 @@ class Auth {
 		const timeNow = Math.floor(Date.now() / 1000);
 
 		const payload = /** @type {JWTPayloadProps} */ ({
-			iss: APP_API_URL,
+			iss: this.#tokenOptions.iss,
 			iat: timeNow - Auth.TIME_DELAY,
 			nbf: timeNow - Auth.TIME_DELAY,
-			exp: timeNow + 3600,
+			exp: timeNow + this.#tokenOptions.age,
 			jti: this.#publicKey,
-			file_encryption_key: this.#file_encryption_key
+			file_encryption_key: this.#tokenOptions.file_encryption_key
 		});
 
 		this.token = jsonwebtoken.sign(payload, this.#secretKey);
@@ -224,8 +207,8 @@ export default Auth;
 /**
  * @typedef {Object} JWTPayloadProps
  * @property {string} iss
- * Token issuer that should be your project domain
- * - ex: `myproject.com`
+ * Token issuer that can be your domain name or a subdomain.
+ * - Default: `api.ilovepdf.com`
  * @property {number} iat
  * Unix timestamp in seconds describe the time when the token was issued.
  * Due error in `ILoveApi` server that does not accept recent generated tokens, iat time is
