@@ -77,6 +77,42 @@ describe('ILoveIMGApi Auth Tests', function () {
 		);
 	});
 
+	it('should throw ZodError when some attribute of params are invalid', function () {
+		// Expect ZodError when type of params itself invalid.
+		expect(() => new Auth(publicKey, secretKey, null)).to.throw(ZodError);
+		expect(() => new Auth(publicKey, secretKey, '905')).to.throw(ZodError);
+		expect(() => new Auth(publicKey, secretKey, true)).to.throw(ZodError);
+		expect(() => new Auth(publicKey, secretKey, 222)).to.throw(ZodError);
+
+		// Expect ZodError when some attribute of params are invalid.
+		expect(
+			() =>
+				new Auth(publicKey, secretKey, {
+					file_encryption_key: '1234567890azqws'
+				})
+		).to.throw(ZodError);
+		expect(
+			() =>
+				new Auth(publicKey, secretKey, {
+					age: {}
+				})
+		).to.throw(ZodError);
+		expect(
+			() =>
+				new Auth(publicKey, secretKey, {
+					iss: 55
+				})
+		).to.throw(ZodError);
+		expect(
+			() =>
+				new Auth(publicKey, secretKey, {
+					file_encryption_key: true,
+					iss: false,
+					age: true
+				})
+		).to.throw(ZodError);
+	});
+
 	it('should generate a correct self-signed authentication token when secretKey is provided using getToken call', async function () {
 		jwtInstance = new Auth(publicKey, secretKey, { iss: 'mydomain.com' });
 		const verifyTokenSpy = sinon.spy(jwtInstance, 'verifyToken');
