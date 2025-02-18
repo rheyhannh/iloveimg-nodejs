@@ -1,0 +1,31 @@
+name: publish
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  npm:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [22.x]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🛠️ Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: https://registry.npmjs.org/
+          cache: 'npm'
+
+      - name: 📥 Download and clean install dependencies
+        run: npm ci
+
+      - name: 🚀 Publish to npm
+        env: 
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        run: npm publish
