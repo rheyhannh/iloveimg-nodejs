@@ -1,6 +1,6 @@
 {
 	"name": "@rheyhannh/iloveimg-nodejs",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"publishConfig": {
 		"access": "public",
 		"registry": "https://registry.npmjs.org/"
@@ -9,9 +9,9 @@
 	"keywords": [
 		"nodejs",
 		"javascript",
-    "image-processing",
-    "iloveapi",
-    "iloveimg"
+		"image-processing",
+		"iloveapi",
+		"iloveimg"
 	],
 	"main": "lib/index.js",
 	"type": "module",
