@@ -31,13 +31,25 @@ By using this library, you get a more structured and type-safe way to interact w
 
 ## 📋 Requirements
 
-## ⚙️ Installation
+To use this library, ensure you have the following installed:
 
+1. **NPM** - Package built with version `@10.9.0`.  
+2. **Node.js** - Package built with version `@22.12.0`.  
+
+You can download them here:  
+- [Download NPM](https://www.npmjs.com/)  
+- [Download Node.js](https://nodejs.org/)
+
+## ⚙️ Installation
+You can install the library via [NPM](https://www.npmjs.com/). Run the following command:
+```sh
+npm install @rheyhannh/iloveimg-nodejs
+```
 
 ## 👋 Getting Started
 ### Using `then/catch` syntax
 ```js
-import ILoveIMGApi from './src/iloveimg/ILoveIMGApi.js';
+import ILoveIMGApi from '@rheyhannh/iloveimg-nodejs';
 
 const iloveimg = new ILoveIMGApi('publicKey', 'secretKey');
 const task = iloveimg.newTask('convertimage');
@@ -56,7 +68,7 @@ task.start()
 
 ### Using `async/await` syntax
 ```js
-import ILoveIMGApi from './src/iloveimg/ILoveIMGApi.js';
+import ILoveIMGApi from '@rheyhannh/iloveimg-nodejs';
 
 const iloveimg = new ILoveIMGApi('publicKey', 'secretKey');
 const task = iloveimg.newTask('convertimage');
@@ -70,7 +82,7 @@ const result = await task.download(); // AxiosResponse
 
 ### List project tasks
 ```js
-import ILoveIMGApi from './src/iloveimg/ILoveIMGApi.js';
+import ILoveIMGApi from '@rheyhannh/iloveimg-nodejs';
 
 // Project secretKey required otherwise listTasks() will throw an Error.
 const iloveimg = new ILoveIMGApi('publicKey', 'secretKey');
@@ -268,7 +280,7 @@ When your application integrates with a [webhook system](https://www.iloveapi.co
 
 **Example: Downloading a Processed File for a Specific Task ID and Server**
 ```js
-import { Task } from './src/iloveimg/ILoveIMGApi.js';
+import { Task } from '@rheyhannh/iloveimg-nodejs';
 
 const task = new Task('publicKey', 'secretKey', 'taskId', 'taskServer');
 
@@ -277,7 +289,7 @@ const result = await task.download(); // AxiosResponse
 
 **Example: Retrieve Task Details for a Specific Task ID and Server**
 ```js
-import { Task } from './src/iloveimg/ILoveIMGApi.js';
+import { Task } from '@rheyhannh/iloveimg-nodejs';
 
 const task = new Task('publicKey', 'secretKey', 'taskId', 'taskServer');
 
@@ -289,7 +301,7 @@ If you prefer to use a custom HTTP client like [Got](https://www.npmjs.com/packa
 
 **Example: Using Auth Module**
 ```js
-import { Auth } from './src/iloveimg/ILoveIMGApi.js';
+import { Auth } from '@rheyhannh/iloveimg-nodejs';
 
 const auth = new Auth('publicKey', 'secretKey');
 
@@ -303,8 +315,8 @@ const payload = auth.verifyToken(); // JWT Payload
 ## 🔮 Whats Next
 Here are some next steps you might find useful:
 - 📖 **Explore the API Documentation** - Check out the official [ILoveAPI](https://www.iloveapi.com/docs/api-reference) or [ILoveIMG](https://www.iloveapi.com/docs/image-guides) documentation to learn more about the available features.
-- 🔧 **Contribute to the Project** – Found a bug or have a feature request? Feel free to open an issue or submit a pull request. 
-- 💬 **Join the Discussion** – Have questions or want to share your experience? Start a discussion in this repository.
+- 🔧 **Contribute to the Project** – Found a bug or have a feature request? Feel free to open an [issue](https://github.com/rheyhannh/iloveimg-nodejs/issues) or submit a [pull request](https://github.com/rheyhannh/iloveimg-nodejs/pulls). 
+- 💬 **Join the Discussion** – Have questions or want to share your experience? Start a [discussion](https://github.com/rheyhannh/iloveimg-nodejs/discussions).
 - 🌟 **Give it a Star** – If this library has been helpful for your project, consider giving it a ⭐ to show your support!
 
 Happy coding! 🎉
