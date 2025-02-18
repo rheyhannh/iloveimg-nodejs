@@ -15,7 +15,7 @@ const { ILOVEIMG_API_URL, ILOVEIMG_API_URL_PROTOCOL, ILOVEIMG_API_VERSION } =
  * @see https://github.com/rheyhannh/iloveimg-nodejs
  * @example
  * ```js
- * import { Auth } from './src/iloveimg/ILoveIMGApi.js';
+ * import { Auth } from '@rheyhannh/iloveimg-nodejs';
  * const auth = new Auth('publicKey', 'secretKey');
  *
  * const token = await auth.getToken(); // JWT

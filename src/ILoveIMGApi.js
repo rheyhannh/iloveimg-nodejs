@@ -16,7 +16,7 @@ const { ILOVEIMG_API_URL, ILOVEIMG_API_URL_PROTOCOL, ILOVEIMG_API_VERSION } =
  * @see https://github.com/rheyhannh/iloveimg-nodejs
  * @example
  * ```js
- * import ILoveIMGApi from './src/iloveimg/ILoveIMGApi.js';
+ * import ILoveIMGApi from '@rheyhannh/iloveimg-nodejs';
  *
  * const iloveimg = new ILoveIMGApi('publicKey', 'secretKey');
  *

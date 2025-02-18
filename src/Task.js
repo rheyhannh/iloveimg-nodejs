@@ -13,7 +13,7 @@ const { ILOVEIMG_API_URL_PROTOCOL, ILOVEIMG_API_VERSION } = config;
  * @see https://github.com/rheyhannh/iloveimg-nodejs
  * @example
  * ```js
- * import { Task } from './src/iloveimg/ILoveIMGApi.js';
+ * import { Task } from '@rheyhannh/iloveimg-nodejs';
  * 
  * const task = new Task('publicKey', 'secretKey', 'taskId', 'taskServer');
  * 
