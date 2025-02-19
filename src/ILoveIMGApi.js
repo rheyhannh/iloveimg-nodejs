@@ -58,8 +58,7 @@ class ILoveIMGApi {
 	 * With this instance, you can add task for specific image tool using `newTask` or list your tasks using `listTasks` (secret key required).
 	 * @param {string} publicKey Projects public key used for authentication, obtained from {@link https://www.iloveapi.com/user/projects here}.
 	 * @param {string} [secretKey=''] Projects secret key used for local token generation, obtained from {@link https://www.iloveapi.com/user/projects here}.
-	 * @param {Object} [params={}] Additional parameters.
-	 * @param {string} [params.file_encryption_key] Encryption key for files.
+	 * @param {import('./schema/Auth.js').SelfSignedTokenOptionsInfered} [params={}] Additional parameters.
 	 */
 	constructor(publicKey, secretKey = '', params = {}) {
 		this.#publicKey = publicKey;

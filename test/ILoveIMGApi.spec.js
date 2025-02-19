@@ -52,6 +52,50 @@ describe('ILoveIMGApi Tests', function () {
 			'secretKey must be a string.'
 		);
 	});
+
+	it('should throw ZodError when some attribute of params are invalid', function () {
+		// Expect ZodError when type of params itself invalid.
+		expect(() => new ILoveIMGApi('publicKey', 'secretKey', null)).to.throw(
+			ZodError
+		);
+		expect(() => new ILoveIMGApi('publicKey', 'secretKey', '325')).to.throw(
+			ZodError
+		);
+		expect(() => new ILoveIMGApi('publicKey', 'secretKey', true)).to.throw(
+			ZodError
+		);
+		expect(() => new ILoveIMGApi('publicKey', 'secretKey', 222)).to.throw(
+			ZodError
+		);
+
+		// Expect ZodError when some attribute of params are invalid.
+		expect(
+			() =>
+				new ILoveIMGApi('publicKey', 'secretKey', {
+					file_encryption_key: '1234567890azqws'
+				})
+		).to.throw(ZodError);
+		expect(
+			() =>
+				new ILoveIMGApi('publicKey', 'secretKey', {
+					age: {}
+				})
+		).to.throw(ZodError);
+		expect(
+			() =>
+				new ILoveIMGApi('publicKey', 'secretKey', {
+					iss: 55
+				})
+		).to.throw(ZodError);
+		expect(
+			() =>
+				new ILoveIMGApi('publicKey', 'secretKey', {
+					file_encryption_key: true,
+					iss: false,
+					age: true
+				})
+		).to.throw(ZodError);
+	});
 });
 
 describe('ILoveIMGApi.newTask() Tests', function () {

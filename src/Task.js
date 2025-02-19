@@ -50,8 +50,7 @@ class Task {
 	 * @param {string} [secretKey=''] Projects secret key used for local token generation, obtained from {@link https://www.iloveapi.com/user/projects here}.
 	 * @param {string} taskId Task id.
 	 * @param {string} taskServer Task server.
-	 * @param {Object} [params={}] Additional parameters.
-	 * @param {string} [params.file_encryption_key] Encryption key for files.
+	 * @param {import('./schema/Auth.js').SelfSignedTokenOptionsInfered} [params={}] Additional parameters.
 	 * @throws {Error} If taskId or taskServer is not provided.
 	 */
 	constructor(publicKey, secretKey = '', taskId, taskServer, params = {}) {

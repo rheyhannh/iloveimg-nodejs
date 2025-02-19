@@ -3,10 +3,7 @@ import { expect, use } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
 import Task from '../src/Task.js';
-import {
-	ILoveApiError,
-	NetworkError
-} from '../src/Error.js';
+import { ILoveApiError, NetworkError } from '../src/Error.js';
 import { ZodError } from 'zod';
 
 use(chaiAsPromised);
@@ -75,6 +72,50 @@ describe('ILoveIMGApi Task Tests', function () {
 			Error,
 			'taskId and taskServer are required and should be string.'
 		);
+	});
+
+	it('should throw ZodError when some attribute of params are invalid', function () {
+		// Expect ZodError when type of params itself invalid.
+		expect(
+			() => new Task('publicKey', 'secretKey', 'taskId', 'taskServer', null)
+		).to.throw(ZodError);
+		expect(
+			() => new Task('publicKey', 'secretKey', 'taskId', 'taskServer', '111')
+		).to.throw(ZodError);
+		expect(
+			() => new Task('publicKey', 'secretKey', 'taskId', 'taskServer', true)
+		).to.throw(ZodError);
+		expect(
+			() => new Task('publicKey', 'secretKey', 'taskId', 'taskServer', 231)
+		).to.throw(ZodError);
+
+		// Expect ZodError when some attribute of params are invalid.
+		expect(
+			() =>
+				new Task('publicKey', 'secretKey', 'taskId', 'taskServer', {
+					file_encryption_key: '1234567890azqws'
+				})
+		).to.throw(ZodError);
+		expect(
+			() =>
+				new Task('publicKey', 'secretKey', 'taskId', 'taskServer', {
+					age: {}
+				})
+		).to.throw(ZodError);
+		expect(
+			() =>
+				new Task('publicKey', 'secretKey', 'taskId', 'taskServer', {
+					iss: 55
+				})
+		).to.throw(ZodError);
+		expect(
+			() =>
+				new Task('publicKey', 'secretKey', 'taskId', 'taskServer', {
+					file_encryption_key: true,
+					iss: false,
+					age: true
+				})
+		).to.throw(ZodError);
 	});
 });
 
