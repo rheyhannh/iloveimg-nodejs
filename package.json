@@ -13,7 +13,7 @@
 		"iloveapi",
 		"iloveimg"
 	],
-	"main": "lib/index.js",
+	"exports": "./lib/index.js",
 	"type": "module",
 	"engines": {
 		"node": ">=20.0.0"
