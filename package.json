@@ -13,7 +13,12 @@
 		"iloveapi",
 		"iloveimg"
 	],
-	"exports": "./lib/index.js",
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"exports": {
+		"import": "./dist/index.js",
+		"require": "./dist/index.cjs"
+	},
 	"type": "module",
 	"engines": {
 		"node": ">=20.0.0"
