@@ -12,6 +12,7 @@ const { ILOVEIMG_API_URL, ILOVEIMG_API_URL_PROTOCOL, ILOVEIMG_API_VERSION } =
  * to issue, verify, and refresh JWT authentication tokens. It supports both server-issued
  * tokens and locally generated self-signed tokens when a secret key is provided.
  *
+ * @class Auth
  * @see https://github.com/rheyhannh/iloveimg-nodejs
  * @example
  * ```js
@@ -58,6 +59,8 @@ class Auth {
 
 	/**
 	 * Creates an instance that issuing, verify and refresh the JWT used to `ILoveApi` server.
+	 * 
+	 * @constructor
 	 * @param {string} publicKey Projects public key used for authentication, obtained from {@link https://www.iloveapi.com/user/projects here}.
 	 * @param {string} [secretKey=''] Projects secret key used for local token generation, obtained from {@link https://www.iloveapi.com/user/projects here}.
 	 * @param {Schema.SelfSignedTokenOptionsInfered} [params={}] Additional parameters.

@@ -8,6 +8,13 @@ import { classifyError } from './Error.js';
 const TaskUtils = _TaskUtils.default;
 const { ILOVEIMG_API_URL_PROTOCOL, ILOVEIMG_API_VERSION } = config;
 
+/**
+ * The `TaskI` class represents a task initiated through `ILoveIMGApi`.
+ * It simplifies the image processing workflow for a specific tool,
+ * handling everything from task creation to file upload, processing, download, etc.
+ *
+ * @class TaskI
+ */
 class TaskI {
 	/**
 	 * Instance of JWT that used for maintaining authentication token used.
@@ -55,6 +62,8 @@ class TaskI {
 
 	/**
 	 * Creates an instance of Task.
+	 *
+	 * @constructor
 	 * @param {import('./Auth.js').default} auth Instance of JWT that used for maintaining authentication token used.
 	 * @param {import('axios').AxiosInstance} fixedServer Axios instance that already configured for starting a Task.
 	 * @param {import('./schema/Tool.js').ToolTypesInfered} taskType Task tool type.

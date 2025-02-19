@@ -10,6 +10,7 @@ const { ILOVEIMG_API_URL_PROTOCOL, ILOVEIMG_API_VERSION } = config;
  * The `Task` class is responsible for handling specific tasks on the `ILoveApi` server, 
  * including downloading processed files and retrieving task details.
  * 
+ * @class Task
  * @see https://github.com/rheyhannh/iloveimg-nodejs
  * @example
  * ```js
@@ -46,6 +47,8 @@ class Task {
 
 	/**
 	 * Creates an instance that allows downloading a processed file or retrieving task details for a specific task ID and its assigned server.
+	 * 
+	 * @constructor
 	 * @param {string} publicKey Projects public key used for authentication, obtained from {@link https://www.iloveapi.com/user/projects here}.
 	 * @param {string} [secretKey=''] Projects secret key used for local token generation, obtained from {@link https://www.iloveapi.com/user/projects here}.
 	 * @param {string} taskId Task id.

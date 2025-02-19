@@ -13,6 +13,7 @@ const { ILOVEIMG_API_URL, ILOVEIMG_API_URL_PROTOCOL, ILOVEIMG_API_VERSION } =
  * The `ILoveIMGApi` class provides an interface to interact with the `ILoveApi` server,
  * allowing to create new tasks for image processing tools and retrieve task lists.
  *
+ * @class ILoveIMGApi
  * @see https://github.com/rheyhannh/iloveimg-nodejs
  * @example
  * ```js
@@ -56,6 +57,8 @@ class ILoveIMGApi {
 	/**
 	 * Create an instance of `ILoveIMGApi` using your project public and secret key (optional).
 	 * With this instance, you can add task for specific image tool using `newTask` or list your tasks using `listTasks` (secret key required).
+	 * 
+	 * @constructor
 	 * @param {string} publicKey Projects public key used for authentication, obtained from {@link https://www.iloveapi.com/user/projects here}.
 	 * @param {string} [secretKey=''] Projects secret key used for local token generation, obtained from {@link https://www.iloveapi.com/user/projects here}.
 	 * @param {import('./schema/Auth.js').SelfSignedTokenOptionsInfered} [params={}] Additional parameters.
