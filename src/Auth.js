@@ -59,7 +59,7 @@ class Auth {
 
 	/**
 	 * Creates an instance that issuing, verify and refresh the JWT used to `ILoveApi` server.
-	 * 
+	 *
 	 * @constructor
 	 * @param {string} publicKey Projects public key used for authentication, obtained from {@link https://www.iloveapi.com/user/projects here}.
 	 * @param {string} [secretKey=''] Projects secret key used for local token generation, obtained from {@link https://www.iloveapi.com/user/projects here}.

@@ -15,10 +15,6 @@ export const TaskStatusTypes = z.enum([
 	'TaskNotFound'
 ]);
 
-//#region Task General Options
-
-// Start
-
 /**
  * @typedef {z.infer<typeof TaskStartGenericOptions>} TaskStartGenericOptionsInfered
  */
@@ -52,8 +48,6 @@ export const TaskStartReturnType = z.object({
 	remaining_files: z.number()
 });
 
-// Add File
-
 /**
  * @typedef {z.infer<typeof TaskAddFileGenericOptions>} TaskAddFileGenericOptionsInfered
  */
@@ -82,8 +76,6 @@ export const TaskAddFileReturnType = z.object({
 	server_filename: z.string()
 });
 
-// Delete File
-
 /**
  * @typedef {z.infer<typeof TaskRemoveFileGenericOptions>} TaskRemoveFileGenericOptionsInfered
  */
@@ -111,8 +103,6 @@ export const TaskRemoveFileReturnType = z.object({
 	 */
 	success: z.boolean()
 });
-
-// Process
 
 /**
  * @typedef {z.infer<typeof TaskProcessRequiredOptions>} TaskProcessRequiredOptionsInfered
@@ -277,8 +267,6 @@ export const TaskProcessReturnType = z.object({
 	task: z.string().optional()
 });
 
-// Download
-
 /**
  * @typedef {z.infer<typeof TaskDownloadGenericOptions>} TaskDownloadGenericOptionsInfered
  */
@@ -291,8 +279,6 @@ export const TaskDownloadGenericOptions = z.object({
 	 */
 	debug: z.boolean().optional()
 });
-
-// Details
 
 /**
  * @typedef {z.infer<typeof TaskDetailsGenericOptions>} TaskDetailsGenericOptionsInfered
@@ -420,8 +406,6 @@ export const TaskDetailsReturnType = z.object({
 		.optional()
 });
 
-// Delete
-
 /**
  * @typedef {z.infer<typeof TaskDeleteGenericOptions>} TaskDeleteGenericOptionsInfered
  */
@@ -434,10 +418,6 @@ export const TaskDeleteGenericOptions = z.object({
 	 */
 	debug: z.boolean().optional()
 });
-
-//#endregion
-
-//#region Task Tool Based Options
 
 /**
  * @typedef {z.infer<typeof TaskProcessConvertImageOptions>} TaskProcessConvertImageOptionsInfered
@@ -611,5 +591,3 @@ export const TaskProcessToolOptions = z.object({
 	/** When tool type are `watermarkimage`, some options are required. */
 	watermarkimage: TaskProcessWatermarkImageOptions
 });
-
-//#endregion
