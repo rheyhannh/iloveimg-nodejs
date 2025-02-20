@@ -39,7 +39,7 @@ declare class Task {
 	 */
 	constructor(
 		publicKey: string,
-		secretKey: string,
+		secretKey?: string,
 		taskId: string,
 		taskServer: string,
 		params?: Partial<SelfSignedTokenOptionsInfered>
