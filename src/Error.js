@@ -2,13 +2,12 @@ import axios, { AxiosError } from 'axios';
 
 /**
  * Represents an error caused by an `ILoveApi` response with a status code `>= 400`.
- * 
  * @class ILoveApiError
  * @extends {AxiosError}
  */
 export class ILoveApiError extends AxiosError {
 	/**
-	 * Creates an instance of {@link ILoveApiError}.
+	 * Creates an instance of `ILoveApiError`.
 	 * @param {string} message - Error message.
 	 * @param {number} status - HTTP status code of the response.
 	 * @param {AxiosError} error - Error thrown by Axios.
@@ -22,13 +21,12 @@ export class ILoveApiError extends AxiosError {
 
 /**
  * Represents a network-related error, such as timeouts or DNS failures.
- * 
  * @class NetworkError
  * @extends {AxiosError}
  */
 export class NetworkError extends AxiosError {
 	/**
-	 * Creates an instance of {@link NetworkError}.
+	 * Creates an instance of `NetworkError`.
 	 * @param {string} message - Error message.
 	 * @param {AxiosError} error - Error thrown by Axios.
 	 */
@@ -45,7 +43,6 @@ export class NetworkError extends AxiosError {
  * - If the error occurs due to network-related issues (e.g., timeout, no response), it is classified as `NetworkError`.
  * - Otherwise, the original error is rethrown.
  *
- * @function classifyError
  * @param {AxiosError | Error} error - The error object to classify.
  * @throws {ILoveApiError | NetworkError | Error} - The classified error.
  */

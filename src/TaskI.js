@@ -64,7 +64,7 @@ class TaskI {
 	 * Creates an instance of Task.
 	 *
 	 * @constructor
-	 * @param {import('./Auth.js').default} auth Instance of JWT that used for maintaining authentication token used.
+	 * @param {import('./Auth.js').default} auth Instance of `Auth` that used for maintaining authentication token used.
 	 * @param {import('axios').AxiosInstance} fixedServer Axios instance that already configured for starting a Task.
 	 * @param {import('./schema/Tool.js').ToolTypesInfered} taskType Task tool type.
 	 */
@@ -76,8 +76,8 @@ class TaskI {
 
 	/**
 	 * Starts task by retrieving the assigned server and task id.
-	 * @param {TaskSchema.TaskStartGenericOptionsInfered} [options] Generic options for start.
-	 * @returns {Promise<TaskSchema.TaskStartReturnTypeInfered>} Object containing assigned server, task id and project remaining files. If `debug` is enabled, it resolves with an object containing request information instead.
+	 * @param {TaskSchema.TaskStartGenericOptionsInfered} [options] Generic options for starting a task.
+	 * @returns {Promise<TaskSchema.TaskStartReturnTypeInfered>} Promise resolving an object containing assigned server, task id and project remaining files. If `debug` is enabled, it resolves with an object containing request information instead.
 	 * @throws {Error} If requests failed.
 	 * @throws {import('zod').ZodError} If any incorrect or invalid `options` type.
 	 */
@@ -128,9 +128,9 @@ class TaskI {
 	}
 
 	/**
-	 * Upload a image to task.
-	 * @param {TaskSchema.TaskAddFileGenericOptionsInfered} options Generic options for addFile.
-	 * @returns {Promise<string>} Server filename as a string. If `debug` is enabled, it resolves with an object containing request information instead.
+	 * Upload a image for this task.
+	 * @param {TaskSchema.TaskAddFileGenericOptionsInfered} options Generic options for uploading image.
+	 * @returns {Promise<string>} Promise resolving a server filename as a string. If `debug` is enabled, it resolves with an object containing request information instead.
 	 * @throws {Error} If requests failed or task id and server are not resolved.
 	 * @throws {import('zod').ZodError} If required options are missing or use invalid options.
 	 */
@@ -160,8 +160,8 @@ class TaskI {
 	}
 
 	/**
-	 * Delete a image previously added.
-	 * @param {TaskSchema.TaskRemoveFileGenericOptionsInfered} options Generic options for deleteFile.
+	 * Delete a image previously that already uploaded on this task.
+	 * @param {TaskSchema.TaskRemoveFileGenericOptionsInfered} options Generic options for delete uploaded image.
 	 * @returns {Promise<void>} If `debug` is enabled, it resolves with an object containing request information instead.
 	 * @throws {Error} If requests failed or task id and server are not resolved.
 	 * @throws {import('zod').ZodError} If required options are missing or use invalid options.
@@ -195,12 +195,12 @@ class TaskI {
 	}
 
 	/**
-	 * Process uploaded files.
-	 * @param {TaskSchema.TaskProcessGenericOptionsInfered} [options] Generic options for process.
+	 * Process this task.
+	 * @param {TaskSchema.TaskProcessGenericOptionsInfered} [options] Generic options for processing task.
 	 * @param {TaskSchema.TaskProcessToolOptionsInfered} [toolOptions] Options for specific tool. When you assign options for different tool, it will be ignored. Please note that some tool has required options you must fill otherwise it will throw, see tool options from {@link https://www.iloveapi.com/docs/api-reference#resizeimage-extra-parameters here}.
 	 * @returns {Promise<TaskSchema.TaskProcessReturnTypeInfered>} Processed file meta information. If `debug` is enabled, it resolves with an object containing request information instead.
 	 * @throws {Error} If requests failed, task id and server are not resolved, no file to process.
-	 * @throws {import('zod').ZodError} If required options are missing or use invalid options.
+	 * @throws {import('zod').ZodError} If required options or toolOptions are missing or invalid.
 	 */
 	async process(options = {}, toolOptions = {}) {
 		if (!this.#task_id || !this.#server) {
@@ -241,9 +241,9 @@ class TaskI {
 	}
 
 	/**
-	 * Downloads processed files.
-	 * @param {TaskSchema.TaskDownloadGenericOptionsInfered} [options] Generic options for download.
-	 * @returns {Promise<import('axios').AxiosResponse<Uint8Array, any>>} Resolve with `AxiosInstance`. If `debug` is enabled, it resolves with an object containing request information instead.
+	 * Downloads processed files on this task.
+	 * @param {TaskSchema.TaskDownloadGenericOptionsInfered} [options] Generic options for download processed files.
+	 * @returns {Promise<import('axios').AxiosResponse<Uint8Array, any>>} Promise resolve with `AxiosInstance`. If `debug` is enabled, it resolves with an object containing request information instead.
 	 * @throws {Error} If requests failed, task id and server are not resolved.
 	 * @throws {import('zod').ZodError} If required options are missing or use invalid options.
 	 */
@@ -277,10 +277,10 @@ class TaskI {
 	}
 
 	/**
-	 * Get this task details.
+	 * Get details on this task.
 	 * @param {TaskSchema.TaskDetailsGenericOptionsInfered} [options] Generic options for details.
 	 * @returns {Promise<TaskSchema.TaskDetailsReturnTypeInfered>} Task details. If `debug` is enabled, it resolves with an object containing request information instead.
-	 * @throws {Error} If requests failed, task id and server are not resolved, no file to process.
+	 * @throws {Error} If requests failed, task id and server are not resolved.
 	 * @throws {import('zod').ZodError} If required options are missing or use invalid options.
 	 */
 	async details(options = {}) {
@@ -309,8 +309,8 @@ class TaskI {
 	}
 
 	/**
-	 * Deletes this task.
-	 * @param {TaskSchema.TaskDeleteGenericOptionsInfered} [options] Generic options for delete.
+	 * Delete this task.
+	 * @param {TaskSchema.TaskDeleteGenericOptionsInfered} [options] Generic options for deleting task.
 	 * @returns {Promise<void>} If `debug` is enabled, it resolves with an object containing request information instead.
 	 * @throws {Error} If requests failed, task id and server are not resolved.
 	 * @throws {import('zod').ZodError} If required options are missing or use invalid options.
@@ -340,8 +340,8 @@ class TaskI {
 	}
 
 	/**
-	 * Retrieve tool type for current task.
-	 * @returns Tool type for current task.
+	 * Retrieve tool type for this task.
+	 * @returns Tool type for this task.
 	 * @example
 	 * ```js
 	 * const iloveimg = new ILoveIMGApi('publicKey', 'secretKey');
@@ -408,8 +408,8 @@ class TaskI {
 	}
 
 	/**
-	 * Retrieve assigned (uploaded) image file for current task. You might need to call `start()` and upload some files first using `addFile()` otherwise it will return `undefined`.
-	 * @returns Assigned (uploaded) image file.
+	 * Retrieve assigned (uploaded) image file for this task. You might need to call `start()` and upload some files first using `addFile()` otherwise it will return `undefined`.
+	 * @returns Uploaded images file.
 	 * @example
 	 * ```js
 	 * const iloveimg = new ILoveIMGApi('publicKey', 'secretKey');
@@ -436,9 +436,8 @@ class TaskI {
 	}
 
 	/**
-	 * Retrieve `AxiosInstance` for current task. This instance use required authentication token and point to correct `ILoveApi` task specific server.
+	 * Retrieve `AxiosInstance` for this task. This instance use required authentication token and point to correct `ILoveApi` task specific server.
 	 * Its usefull to create a direct request to server without using existing methods. You might need to call `start()` first otherwise it will return `undefined`.
-	 * @returns
 	 * @example
 	 * ```js
 	 * // Delete current task without using delete() method.

@@ -7,7 +7,7 @@ import { classifyError } from './Error.js';
 const { ILOVEIMG_API_URL_PROTOCOL, ILOVEIMG_API_VERSION } = config;
 
 /**
- * The `Task` class is responsible for handling specific tasks on the `ILoveApi` server, 
+ * The `Task` class is responsible for handling specific tasks on the `ILoveApi` server,
  * including downloading processed files and retrieving task details.
  *
  * @class Task
@@ -51,10 +51,10 @@ class Task {
 	 * @constructor
 	 * @param {string} publicKey Projects public key used for authentication, obtained from {@link https://www.iloveapi.com/user/projects here}.
 	 * @param {string} [secretKey=''] Projects secret key used for local token generation, obtained from {@link https://www.iloveapi.com/user/projects here}.
-	 * @param {string} taskId Task id.
-	 * @param {string} taskServer Task server.
+	 * @param {string} taskId The unique task identifier.
+	 * @param {string} taskServer The server assigned to the task.
 	 * @param {import('./schema/Auth.js').SelfSignedTokenOptionsInfered} [params={}] Additional parameters.
-	 * @throws {Error} If taskId or taskServer is not provided.
+	 * @throws {Error} If taskId or taskServer is missing or invalid.
 	 */
 	constructor(publicKey, secretKey = '', taskId, taskServer, params = {}) {
 		if (
@@ -78,9 +78,9 @@ class Task {
 	}
 
 	/**
-	 * Downloads processed files.
+	 * Downloads processed files associated with this task.
 	 * @param {TaskSchema.TaskDownloadGenericOptionsInfered} [options] Generic options for download.
-	 * @returns {Promise<import('axios').AxiosResponse<Uint8Array, any>>} Resolve with `AxiosInstance`. If `debug` is enabled, it resolves with an object containing request information instead.
+	 * @returns {Promise<import('axios').AxiosResponse<Uint8Array, any>>} A promise resolving to an Axios response containing file data. If `debug` is enabled, it resolves with an object containing request information instead.
 	 * @throws {Error} If requests failed, task id and server are not resolved.
 	 * @throws {import('zod').ZodError} If required options are missing or use invalid options.
 	 */
@@ -110,8 +110,8 @@ class Task {
 	}
 
 	/**
-	 * Get this task details.
-	 * @param {TaskSchema.TaskDetailsGenericOptionsInfered} [options] Generic options for details.
+	 * Retrieves details about this task.
+	 * @param {TaskSchema.TaskDetailsGenericOptionsInfered} [options] Generic options for retrieving task details.
 	 * @returns {Promise<TaskSchema.TaskDetailsReturnTypeInfered>} Task details. If `debug` is enabled, it resolves with an object containing request information instead.
 	 * @throws {Error} If requests failed, task id and server are not resolved, no file to process.
 	 * @throws {import('zod').ZodError} If required options are missing or use invalid options.

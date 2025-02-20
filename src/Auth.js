@@ -97,7 +97,7 @@ class Auth {
 	/**
 	 * Retrieves a valid authentication token, either from cache, local generation, or from `ILoveApi` server.
 	 * When `secretKey` provided it will generate `self-signed` authentication token, otherwise authentication token will retrieved from `ILoveApi` server.
-	 * @returns {Promise<string>} A valid JWT token.
+	 * @returns {Promise<string>} A promise resolving to a valid JWT token.
 	 * @throws {ILoveApiError | NetworkError | Error} If authentication token cannot be retrieved.
 	 * @see {@link https://www.iloveapi.com/docs/api-reference#authentication ILoveApi Authentication Docs}
 	 */
@@ -121,7 +121,7 @@ class Auth {
 	/**
 	 * Verifies if the current (cached) token is valid and not expired.
 	 * If invalid, it resets the current token.
-	 * @returns {JWTPayloadProps | undefined} When token exist and valid , returns the payload otherwise returns `undefined`
+	 * @returns {JWTPayloadProps | undefined} The decoded JWT payload if exist and valid, otherwise undefined.
 	 */
 	verifyToken() {
 		if (this.token) {

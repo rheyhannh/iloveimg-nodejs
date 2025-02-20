@@ -21,7 +21,7 @@ const { ILOVEIMG_API_URL, ILOVEIMG_API_URL_PROTOCOL, ILOVEIMG_API_VERSION } =
  *
  * const iloveimg = new ILoveIMGApi('publicKey', 'secretKey');
  *
- * // Create 'Convert Image' Task 
+ * // Create 'Convert Image' Task
  * const task = iloveimg.newTask('convertimage');
  * await task.start();
  * await task.addFile({ cloud_file: 'https://i.imgur.com/awesome.jpeg', filename: 'awesome.jpeg' });
@@ -76,7 +76,7 @@ class ILoveIMGApi {
 	/**
 	 * Creates a new task for a specific `ILoveIMG` tool.
 	 * @param {ToolSchema.ToolTypesInfered} type Tool type to run.
-	 * @returns {TaskI} Task instance
+	 * @returns {TaskI} Task instance.
 	 * @throws {import('zod').ZodError} If the tool type is not valid.
 	 */
 	newTask(type) {
@@ -90,7 +90,7 @@ class ILoveIMGApi {
 	 * You need to provide secret key to get the task lists, otherwise this method will throw an error.
 	 * @param {Schema.ListTasksOptionsInfered} [options] Options to get the task list.
 	 * @returns {Promise<Array<Schema.ListTasksReturnTypeInfered>>} List of tasks.
-	 * @throws {Error} If secret key not provided or requests failed.
+	 * @throws {Error} If the secret key is not provided or requests fail.
 	 * @throws {import('zod').ZodError} If any incorrect or invalid `options` type.
 	 */
 	async listTasks(options = {}) {
