@@ -230,7 +230,7 @@ export type TaskProcessReturnTypeInfered = {
 	/**
 	 * Task status. When you use `webhook` parameter, this attribute wont exist.
 	 */
-	status: TaskStatusTypes;
+	status: TaskStatusTypesInfered;
 	/**
 	 * Task message that only available when the `webhook` parameter is used.
 	 */
@@ -267,7 +267,7 @@ export type TaskDetailsReturnTypeInfered = {
 	/**
 	 * Task status.
 	 */
-	status: TaskStatusTypes;
+	status: TaskStatusTypesInfered;
 	/**
 	 * Task status message.
 	 */
@@ -506,20 +506,20 @@ export type TaskProcessWatermarkImageOptionsInfered = {
 	/**
 	 * At least one element required
 	 */
-	elements: TaskProcessWatermarkImageElementsProps[];
+	elements: TaskProcessWatermarkImageElementsPropsInfered[];
 };
 
 export declare const TaskProcessWatermarkImageOptions: z.ZodType<TaskProcessWatermarkImageOptionsInfered>;
 
 export type TaskProcessToolOptionsInfered = {
 	/** When tool type are `convertimage`, this options are optional. */
-	convertimage?: TaskProcessConvertImageOptions;
+	convertimage?: TaskProcessConvertImageOptionsInfered;
 	/** When tool type are `removebackgroundimage`, this options are optional. */
 	removebackgroundimage?: {};
 	/** When tool type are `upscaleimage`, some options are required. */
-	upscaleimage?: TaskProcessUpscaleImageOptions;
+	upscaleimage: TaskProcessUpscaleImageOptionsInfered;
 	/** When tool type are `watermarkimage`, some options are required. */
-	watermarkimage?: TaskProcessWatermarkImageOptions;
+	watermarkimage: TaskProcessWatermarkImageOptionsInfered;
 };
 
 export declare const TaskProcessToolOptions: z.ZodType<TaskProcessToolOptionsInfered>;
