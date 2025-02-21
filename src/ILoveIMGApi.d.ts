@@ -5,6 +5,27 @@ import * as Schema from './schema/ILoveIMGApi';
 import * as ToolSchema from './schema/Tool';
 import * as AuthSchema from './schema/Auth';
 
+type RequestBodyLike = Record<any, string>;
+type RequestHeadersLike = Record<any, Array<string>>;
+
+export type DebugReturnTypeInfered = {
+	/**
+	 * Represents the request body received by `ILoveIMGApi` servers.
+	 * This attribute may not always be available, so it's recommended to use optional chaining when accessing it.
+	 */
+	'Request Post [Body]'?: RequestBodyLike;
+	/**
+	 * Contains the list of files included in the request.
+	 * This attribute may not always be available, so it's recommended to use optional chaining when accessing it.
+	 */
+	'Request Post [Files]'?: Array<any>;
+	/**
+	 * Represents the request headers received by `ILoveIMGApi` servers.
+	 * This attribute may not always be available, so it's recommended to use optional chaining when accessing it.
+	 */
+	'Request Headers'?: RequestHeadersLike;
+};
+
 /**
  * The `ILoveIMGApi` class provides an interface to interact with the `ILoveApi` server,
  * allowing to create new tasks for image processing tools and retrieve task lists.
@@ -51,9 +72,9 @@ declare class ILoveIMGApi {
 	 * Creates a new task for a specific `ILoveIMG` tool.
 	 * @param type Tool type to run.
 	 * @returns Task instance.
-	 * @throws `ZodError` If the tool type is not valid.
+	 * @throws `ZodError` If the tool `type` is not valid.
 	 */
-	newTask(type: ToolSchema.ToolTypesInfered): TaskI;
+	newTask<T extends ToolSchema.ToolTypesInfered>(type: T): TaskI<T>;
 
 	/**
 	 * Returns a task lists from `ILoveApi` servers ordered from newest to older.
@@ -63,6 +84,16 @@ declare class ILoveIMGApi {
 	 * @throws `Error` If the secret key is not provided or requests fail.
 	 * @throws `ZodError` If any incorrect or invalid `options` type.
 	 */
+	listTasks(
+		options: Omit<Schema.ListTasksOptionsInfered, 'debug'> & {
+			/** Enables or disables debug mode, default is `false`. */ debug: true;
+		}
+	): Promise<DebugReturnTypeInfered>;
+	listTasks(
+		options: Omit<Schema.ListTasksOptionsInfered, 'debug'> & {
+			/** Enables or disables debug mode, default is `false`. */ debug: false;
+		}
+	): Promise<Array<Schema.ListTasksReturnTypeInfered>>;
 	listTasks(
 		options?: Schema.ListTasksOptionsInfered
 	): Promise<Array<Schema.ListTasksReturnTypeInfered>>;

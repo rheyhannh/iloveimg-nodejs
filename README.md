@@ -208,17 +208,12 @@ const options = {
 // In the ILoveIMG documentation, these are referred to as 'extra parameters'.
 // Some attributes are required, and if they are missing or incorrectly typed, a ZodError will be thrown.
 // Reference: https://www.iloveapi.com/docs/api-reference#upscaleimage-extra-parameters
-const toolOptions = {
-    upscaleimage: {
-        multiplier: 4,
-    }
+const upscaleOptions = {
+    multiplier: 4
 };
 
 await task.addFile({ cloud_file: 'https://i.imgur.com/awesome.jpeg' });
-await task.process(options, toolOptions);
-
-// Zod validation only applies to the tool options used in `newTask()`.
-// For example, if you specify options for `convertimage` while using the `upscaleimage` tool, no ZodError will be thrown.
+await task.process(options, upscaleOptions);
 ```
 
 **Example: Debugging API Requests**
@@ -276,7 +271,7 @@ DELETE https://api8g.iloveimg.com/v1/task/loremipsumdolor
 ```
 
 ### Task Module
-When your application integrates with a [webhook system](https://www.iloveapi.com/docs/api-reference#webhooks), ILoveApi's servers will notify your webhook once a task has been processed. In such cases, you may need to download the processed file or retrieve task details for a specific task ID and its assigned server. To streamline this process, you can use the `Task` module, which provides functionality to download processed files and fetch task details effortlessly.
+When your application implements a [webhook](https://www.iloveapi.com/docs/api-reference#webhooks), ILoveApi's servers will notify your webhook once a task has been processed. In such cases, you may need to download the processed file or retrieve task details for a specific task ID and its assigned server. To streamline this process, you can use the `Task` module, which provides functionality to download processed files and fetch task details effortlessly.
 
 **Example: Downloading a Processed File for a Specific Task ID and Server**
 ```js
@@ -311,6 +306,37 @@ const payload = auth.verifyToken(); // JWT Payload
 // Use the token when making requests to the `ILoveApi` server.
 // Include it in the `Authorization` header with the 'Bearer' prefix.
 ```
+
+**Example: Customizing a Self-Signed Token Payload**
+
+When you provide a `secretKey`, authentication with the server uses a self-signed token. This allows you to customize the token's payload, including:
+- `iss` – The token issuer (e.g., your domain)
+- `age` – The token's validity period in seconds
+
+You can define these options when creating an authentication instance, as shown below:
+```js
+import ILoveIMGApi, { Auth, Task } from '@rheyhannh/iloveimg-nodejs';
+
+const auth = new Auth('publicKey', 'secretKey', {
+  iss: 'mydomain.com', // Custom issuer
+  age: 1800 // Token valid for 30 minutes
+});
+
+const token = await auth.getToken(); // Returns JWT token
+const payload = auth.verifyToken(); // Returns decoded JWT payload
+
+// You can also customize token settings when using `ILoveIMGApi` or `Task` instances
+const iloveimg = new ILoveIMGApi('publicKey', 'secretKey', {
+  iss: 'mydomain.com',
+  age: 7200 // Token valid for 2 hours
+});
+
+const task = new Task('publicKey', 'secretKey', 'taskId', 'taskServer', {
+  iss: 'mydomain.com',
+  age: 3600 // Token valid for 1 hour
+});
+```
+This flexibility allows you to define different token settings depending on your use case 🤹🏻‍♀️
 
 ## 🔮 Whats Next
 Here are some next steps you might find useful:

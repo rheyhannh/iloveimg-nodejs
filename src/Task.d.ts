@@ -2,6 +2,7 @@ import { AxiosInstance, AxiosResponse } from 'axios';
 import Auth from './Auth';
 import * as TaskSchema from './schema/Task';
 import { SelfSignedTokenOptionsInfered } from './schema/Auth';
+import { DebugReturnTypeInfered } from './ILoveIMGApi';
 
 /**
  * The `Task` class is responsible for handling specific tasks on the `ILoveApi` server,
@@ -46,23 +47,43 @@ declare class Task {
 	);
 
 	/**
-	 * Downloads processed files associated with this task.
+	 * Downloads processed files associated with this task by making request to `ILoveIMG` servers.
 	 * @param options Generic options for download.
-	 * @returns A promise resolving to an Axios response containing file data. If `debug` is enabled, it resolves with an object containing request information instead.
+	 * @returns Promise resolve with `AxiosInstance`.
 	 * @throws `Error` If the request fails.
-	 * @throws `ZodError` If required options are missing or use invalid options.
+	 * @throws `ZodError` If required `options` are missing or invalid.
 	 */
+	download(
+		options: Omit<TaskSchema.TaskDownloadGenericOptionsInfered, 'debug'> & {
+			/** Enables or disables debug mode, default is `false`. */ debug: true;
+		}
+	): Promise<DebugReturnTypeInfered>;
+	download(
+		options: Omit<TaskSchema.TaskDownloadGenericOptionsInfered, 'debug'> & {
+			/** Enables or disables debug mode, default is `false`. */ debug: false;
+		}
+	): Promise<AxiosResponse<Uint8Array>>;
 	download(
 		options?: TaskSchema.TaskDownloadGenericOptionsInfered
 	): Promise<AxiosResponse<Uint8Array>>;
 
 	/**
-	 * Retrieves details about this task.
+	 * Retrieve task details for this task by making request to `ILoveIMG` servers.
 	 * @param options Generic options for retrieving task details.
-	 * @returns A promise resolving to the task details.
-	 * @throws `Error` If the request fails or required parameters are missing.
-	 * @throws `ZodError` If required options are missing or use invalid options.
+	 * @returns Promise with task details.
+	 * @throws `Error` If the request fails.
+	 * @throws `ZodError` If required `options` are missing or invalid.
 	 */
+	details(
+		options: Omit<TaskSchema.TaskDetailsGenericOptionsInfered, 'debug'> & {
+			/** Enables or disables debug mode, default is `false`. */ debug: true;
+		}
+	): Promise<DebugReturnTypeInfered>;
+	details(
+		options: Omit<TaskSchema.TaskDetailsGenericOptionsInfered, 'debug'> & {
+			/** Enables or disables debug mode, default is `false`. */ debug: false;
+		}
+	): Promise<TaskSchema.TaskDetailsReturnTypeInfered>;
 	details(
 		options?: TaskSchema.TaskDetailsGenericOptionsInfered
 	): Promise<TaskSchema.TaskDetailsReturnTypeInfered>;

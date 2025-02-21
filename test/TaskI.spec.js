@@ -3,10 +3,7 @@ import { expect, use } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
 import TaskI from '../src/TaskI.js';
-import {
-	ILoveApiError,
-	NetworkError
-} from '../src/Error.js';
+import { ILoveApiError, NetworkError } from '../src/Error.js';
 import { ZodError } from 'zod';
 import * as TaskSchema from '../src/schema/Task.js';
 import * as _TaskUtils from '../src/util/task.util.js';
@@ -192,7 +189,10 @@ describe('ILoveIMGApi TaskI.start() Tests', function () {
 			{ server: '', task: 'assigned-task-id', remaining_files: 55 }
 		];
 
-		const taskInstance = new TaskI({ getToken: async () => 'faketoken' }, setup);
+		const taskInstance = new TaskI(
+			{ getToken: async () => 'faketoken' },
+			setup
+		);
 		taskInstance._setTool('upscaleimage');
 
 		for (let index = 0; index < setupData.length; index++) {
@@ -222,7 +222,10 @@ describe('ILoveIMGApi TaskI.start() Tests', function () {
 			remaining_files: 255
 		};
 
-		const taskInstance = new TaskI({ getToken: async () => 'faketoken' }, setup);
+		const taskInstance = new TaskI(
+			{ getToken: async () => 'faketoken' },
+			setup
+		);
 		taskInstance._setTool('upscaleimage');
 
 		const getStub = sinon.stub(setup, 'get').resolves({ data: setupData });
@@ -1758,7 +1761,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 		);
 	});
 
-	it('should throw ZodError when some attribute of toolOptions.convertimage are invalid', async function () {
+	it('should throw ZodError when some attribute of convertimage toolOptions are invalid', async function () {
 		// Use internal method to override private field
 		task._setTaskId('stubed-task_id');
 		task._setServer('stubed-server');
@@ -1770,58 +1773,30 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 		]);
 		task._setTool('convertimage');
 
-		// Expect ZodError when type of toolOptions.convertimage itself are invalid.
+		// Expect ZodError when type of toolOptions itself are invalid.
+		await expect(task.process(undefined, null)).to.be.rejectedWith(ZodError);
+
+		await expect(task.process(undefined, 1)).to.be.rejectedWith(ZodError);
+
+		await expect(task.process(undefined, 'lorem')).to.be.rejectedWith(ZodError);
+
+		await expect(task.process(undefined, false)).to.be.rejectedWith(ZodError);
+
+		// Expect ZodError when some attribute of convertimage toolOptions are invalid.
+		await expect(task.process(undefined, { to: 'mp3' })).to.be.rejectedWith(
+			ZodError
+		);
+
 		await expect(
-			task.process(undefined, {
-				convertimage: null
-			})
+			task.process(undefined, { gif_time: false })
 		).to.be.rejectedWith(ZodError);
 
 		await expect(
-			task.process(undefined, {
-				convertimage: 1
-			})
-		).to.be.rejectedWith(ZodError);
-
-		await expect(
-			task.process(undefined, {
-				convertimage: 'lorem'
-			})
-		).to.be.rejectedWith(ZodError);
-
-		await expect(
-			task.process(undefined, {
-				convertimage: false
-			})
-		).to.be.rejectedWith(ZodError);
-
-		// Expect ZodError when some attribute of toolOptions.convertimage are invalid.
-		await expect(
-			task.process(undefined, {
-				convertimage: {
-					to: 'mp3'
-				}
-			})
-		).to.be.rejectedWith(ZodError);
-
-		await expect(
-			task.process(undefined, {
-				convertimage: {
-					gif_time: false
-				}
-			})
-		).to.be.rejectedWith(ZodError);
-
-		await expect(
-			task.process(undefined, {
-				convertimage: {
-					gif_loop: null
-				}
-			})
+			task.process(undefined, { gif_loop: null })
 		).to.be.rejectedWith(ZodError);
 	});
 
-	it('should throw ZodError when some attribute of toolOptions.upscaleimage are invalid', async function () {
+	it('should throw ZodError when some attribute of upscaleimage toolOptions are invalid', async function () {
 		// Use internal method to override private field
 		task._setTaskId('stubed-task_id');
 		task._setServer('stubed-server');
@@ -1833,60 +1808,30 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 		]);
 		task._setTool('upscaleimage');
 
-		// Expect ZodError when type of toolOptions.upscaleimage itself are invalid.
-		await expect(
-			task.process(undefined, {
-				upscaleimage: null
-			})
-		).to.be.rejectedWith(ZodError);
+		// Expect ZodError when type of toolOptions itself are invalid.
+		await expect(task.process(undefined, null)).to.be.rejectedWith(ZodError);
 
-		await expect(
-			task.process(undefined, {
-				upscaleimage: 1
-			})
-		).to.be.rejectedWith(ZodError);
+		await expect(task.process(undefined, 1)).to.be.rejectedWith(ZodError);
 
-		await expect(
-			task.process(undefined, {
-				upscaleimage: 'lorem'
-			})
-		).to.be.rejectedWith(ZodError);
+		await expect(task.process(undefined, 'lorem')).to.be.rejectedWith(ZodError);
 
-		await expect(
-			task.process(undefined, {
-				upscaleimage: false
-			})
-		).to.be.rejectedWith(ZodError);
+		await expect(task.process(undefined, false)).to.be.rejectedWith(ZodError);
 
-		// Expect ZodError when some attribute of toolOptions.upscaleimage are invalid.
-		await expect(
-			task.process(undefined, {
-				upscaleimage: {
-					multiplier: 5
-				}
-			})
-		).to.be.rejectedWith(ZodError);
+		// Expect ZodError when some attribute of upscaleimage toolOptions are invalid.
+		await expect(task.process(undefined, { multiplier: 5 })).to.be.rejectedWith(
+			ZodError
+		);
 
-		await expect(
-			task.process(undefined, {
-				upscaleimage: {}
-			})
-		).to.be.rejectedWith(ZodError);
+		await expect(task.process(undefined, {})).to.be.rejectedWith(ZodError);
 
-		await expect(
-			task.process(undefined, {
-				upscaleimage: null
-			})
-		).to.be.rejectedWith(ZodError);
+		await expect(task.process(undefined, null)).to.be.rejectedWith(ZodError);
 
-		await expect(
-			task.process(undefined, {
-				upscaleimage: undefined
-			})
-		).to.be.rejectedWith(ZodError);
+		await expect(task.process(undefined, undefined)).to.be.rejectedWith(
+			ZodError
+		);
 	});
 
-	it('should throw ZodError when some attribute of toolOptions.watermarkimage are invalid', async function () {
+	it('should throw ZodError when some attribute of watermarkimage toolOptions are invalid', async function () {
 		// Use internal method to override private field
 		task._setTaskId('stubed-task_id');
 		task._setServer('stubed-server');
@@ -1898,343 +1843,267 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 		]);
 		task._setTool('watermarkimage');
 
-		// Expect ZodError when type of toolOptions.watermarkimage itself are invalid.
+		// Expect ZodError when type of toolOptions itself are invalid.
+		await expect(task.process(undefined, null)).to.be.rejectedWith(ZodError);
+
+		await expect(task.process(undefined, 1)).to.be.rejectedWith(ZodError);
+
+		await expect(task.process(undefined, 'lorem')).to.be.rejectedWith(ZodError);
+
+		await expect(task.process(undefined, false)).to.be.rejectedWith(ZodError);
+
+		// Expect ZodError when some attribute of watermarkimage toolOptions are invalid.
+		await expect(
+			task.process(undefined, { elements: null })
+		).to.be.rejectedWith(ZodError);
+
+		await expect(
+			task.process(undefined, { elements: undefined })
+		).to.be.rejectedWith(ZodError);
+
+		await expect(task.process(undefined, { elements: [] })).to.be.rejectedWith(
+			ZodError
+		);
+
+		await expect(
+			task.process(undefined, { elements: [{}] })
+		).to.be.rejectedWith(ZodError);
+
+		await expect(
+			task.process(undefined, { elements: [{ type: null }] })
+		).to.be.rejectedWith(ZodError);
+
 		await expect(
 			task.process(undefined, {
-				watermarkimage: null
+				elements: [
+					{
+						// 'image' should be filled
+						type: 'image'
+					}
+				]
 			})
 		).to.be.rejectedWith(ZodError);
 
 		await expect(
 			task.process(undefined, {
-				watermarkimage: 1
+				elements: [
+					{
+						// 'text' should be filled
+						type: 'text'
+					}
+				]
 			})
 		).to.be.rejectedWith(ZodError);
 
 		await expect(
 			task.process(undefined, {
-				watermarkimage: 'lorem'
+				elements: [
+					{
+						// 'image' should be filled and string
+						type: 'image',
+						image: 5
+					}
+				]
 			})
 		).to.be.rejectedWith(ZodError);
 
 		await expect(
 			task.process(undefined, {
-				watermarkimage: false
-			})
-		).to.be.rejectedWith(ZodError);
-
-		// Expect ZodError when some attribute of toolOptions.watermarkimage are invalid.
-		await expect(
-			task.process(undefined, {
-				watermarkimage: {
-					elements: null
-				}
-			})
-		).to.be.rejectedWith(ZodError);
-
-		await expect(
-			task.process(undefined, {
-				watermarkimage: {
-					elements: undefined
-				}
+				elements: [
+					{
+						// 'text' should be filled and string
+						type: 'text',
+						text: false
+					}
+				]
 			})
 		).to.be.rejectedWith(ZodError);
 
 		await expect(
 			task.process(undefined, {
-				watermarkimage: {
-					elements: []
-				}
+				elements: [
+					{
+						image: 'my lovely img url'
+					}
+				]
 			})
 		).to.be.rejectedWith(ZodError);
 
 		await expect(
 			task.process(undefined, {
-				watermarkimage: {
-					elements: [{}]
-				}
+				elements: [
+					{
+						text: 'my lovely text'
+					}
+				]
 			})
 		).to.be.rejectedWith(ZodError);
 
 		await expect(
 			task.process(undefined, {
-				watermarkimage: {
-					elements: [{ type: null }]
-				}
+				elements: [
+					{
+						type: 'text',
+						text: 'my lovely text',
+						gravity: 'JawaBarat'
+					}
+				]
 			})
 		).to.be.rejectedWith(ZodError);
 
 		await expect(
 			task.process(undefined, {
-				watermarkimage: {
-					elements: [
-						{
-							// 'image' should be filled
-							type: 'image'
-						}
-					]
-				}
+				elements: [
+					{
+						type: 'image',
+						image: 'my lovely text',
+						vertical_adjustment_percent: false
+					}
+				]
 			})
 		).to.be.rejectedWith(ZodError);
 
 		await expect(
 			task.process(undefined, {
-				watermarkimage: {
-					elements: [
-						{
-							// 'text' should be filled
-							type: 'text'
-						}
-					]
-				}
+				elements: [
+					{
+						type: 'text',
+						text: 'my lovely text',
+						horizontal_adjustment_percent: null
+					}
+				]
 			})
 		).to.be.rejectedWith(ZodError);
 
 		await expect(
 			task.process(undefined, {
-				watermarkimage: {
-					elements: [
-						{
-							// 'image' should be filled and string
-							type: 'image',
-							image: 5
-						}
-					]
-				}
+				elements: [
+					{
+						type: 'image',
+						image: 'my lovely text',
+						rotation: -1
+					}
+				]
 			})
 		).to.be.rejectedWith(ZodError);
 
 		await expect(
 			task.process(undefined, {
-				watermarkimage: {
-					elements: [
-						{
-							// 'text' should be filled and string
-							type: 'text',
-							text: false
-						}
-					]
-				}
+				elements: [
+					{
+						type: 'image',
+						image: 'my lovely text',
+						rotation: 361
+					}
+				]
 			})
 		).to.be.rejectedWith(ZodError);
 
 		await expect(
 			task.process(undefined, {
-				watermarkimage: {
-					elements: [
-						{
-							image: 'my lovely img url'
-						}
-					]
-				}
+				elements: [
+					{
+						type: 'text',
+						text: 'my lovely text',
+						font_family: 'Ariel Peterpan'
+					}
+				]
 			})
 		).to.be.rejectedWith(ZodError);
 
 		await expect(
 			task.process(undefined, {
-				watermarkimage: {
-					elements: [
-						{
-							text: 'my lovely text'
-						}
-					]
-				}
+				elements: [
+					{
+						type: 'image',
+						image: 'my lovely text',
+						font_style: 999
+					}
+				]
 			})
 		).to.be.rejectedWith(ZodError);
 
 		await expect(
 			task.process(undefined, {
-				watermarkimage: {
-					elements: [
-						{
-							type: 'text',
-							text: 'my lovely text',
-							gravity: 'JawaBarat'
-						}
-					]
-				}
+				elements: [
+					{
+						type: 'image',
+						image: 'my lovely text',
+						font_style: 'bold'
+					}
+				]
 			})
 		).to.be.rejectedWith(ZodError);
 
 		await expect(
 			task.process(undefined, {
-				watermarkimage: {
-					elements: [
-						{
-							type: 'image',
-							image: 'my lovely text',
-							vertical_adjustment_percent: false
-						}
-					]
-				}
+				elements: [
+					{
+						type: 'image',
+						image: 'my lovely text',
+						font_style: 'italic'
+					}
+				]
 			})
 		).to.be.rejectedWith(ZodError);
 
 		await expect(
 			task.process(undefined, {
-				watermarkimage: {
-					elements: [
-						{
-							type: 'text',
-							text: 'my lovely text',
-							horizontal_adjustment_percent: null
-						}
-					]
-				}
+				elements: [
+					{
+						type: 'text',
+						text: 'my lovely text',
+						font_size: null
+					}
+				]
 			})
 		).to.be.rejectedWith(ZodError);
 
 		await expect(
 			task.process(undefined, {
-				watermarkimage: {
-					elements: [
-						{
-							type: 'image',
-							image: 'my lovely text',
-							rotation: -1
-						}
-					]
-				}
+				elements: [
+					{
+						type: 'image',
+						image: 'my lovely text',
+						font_color: -999
+					}
+				]
 			})
 		).to.be.rejectedWith(ZodError);
 
 		await expect(
 			task.process(undefined, {
-				watermarkimage: {
-					elements: [
-						{
-							type: 'image',
-							image: 'my lovely text',
-							rotation: 361
-						}
-					]
-				}
+				elements: [
+					{
+						type: 'image',
+						image: 'my lovely img url',
+						transparency: 0
+					}
+				]
 			})
 		).to.be.rejectedWith(ZodError);
 
 		await expect(
 			task.process(undefined, {
-				watermarkimage: {
-					elements: [
-						{
-							type: 'text',
-							text: 'my lovely text',
-							font_family: 'Ariel Peterpan'
-						}
-					]
-				}
+				elements: [
+					{
+						type: 'image',
+						image: 'my lovely img url',
+						transparency: 100.1
+					}
+				]
 			})
 		).to.be.rejectedWith(ZodError);
 
 		await expect(
 			task.process(undefined, {
-				watermarkimage: {
-					elements: [
-						{
-							type: 'image',
-							image: 'my lovely text',
-							font_style: 999
-						}
-					]
-				}
-			})
-		).to.be.rejectedWith(ZodError);
-
-		await expect(
-			task.process(undefined, {
-				watermarkimage: {
-					elements: [
-						{
-							type: 'image',
-							image: 'my lovely text',
-							font_style: 'bold'
-						}
-					]
-				}
-			})
-		).to.be.rejectedWith(ZodError);
-
-		await expect(
-			task.process(undefined, {
-				watermarkimage: {
-					elements: [
-						{
-							type: 'image',
-							image: 'my lovely text',
-							font_style: 'italic'
-						}
-					]
-				}
-			})
-		).to.be.rejectedWith(ZodError);
-
-		await expect(
-			task.process(undefined, {
-				watermarkimage: {
-					elements: [
-						{
-							type: 'text',
-							text: 'my lovely text',
-							font_size: null
-						}
-					]
-				}
-			})
-		).to.be.rejectedWith(ZodError);
-
-		await expect(
-			task.process(undefined, {
-				watermarkimage: {
-					elements: [
-						{
-							type: 'image',
-							image: 'my lovely text',
-							font_color: -999
-						}
-					]
-				}
-			})
-		).to.be.rejectedWith(ZodError);
-
-		await expect(
-			task.process(undefined, {
-				watermarkimage: {
-					elements: [
-						{
-							type: 'image',
-							image: 'my lovely img url',
-							transparency: 0
-						}
-					]
-				}
-			})
-		).to.be.rejectedWith(ZodError);
-
-		await expect(
-			task.process(undefined, {
-				watermarkimage: {
-					elements: [
-						{
-							type: 'image',
-							image: 'my lovely img url',
-							transparency: 100.1
-						}
-					]
-				}
-			})
-		).to.be.rejectedWith(ZodError);
-
-		await expect(
-			task.process(undefined, {
-				watermarkimage: {
-					elements: [
-						{
-							type: 'image',
-							image: 'my lovely img url',
-							mosaic: null
-						}
-					]
-				}
+				elements: [
+					{
+						type: 'image',
+						image: 'my lovely img url',
+						mosaic: null
+					}
+				]
 			})
 		).to.be.rejectedWith(ZodError);
 	});
@@ -2458,100 +2327,62 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 			/** @type {Array<TaskSchema.TaskProcessToolOptionsInfered>} */
 			toolOptions: [
 				{
-					convertimage: {
-						to: undefined
-					},
-					upscaleimage: {
-						multiplier: 6
-					}
+					to: undefined,
+					multiplier: 6
 				},
 				{
-					convertimage: {
-						to: 'png',
-						gif_time: 25,
-						gif_loop: false
-					},
-					upscaleimage: null,
-					removebackgroundimage: undefined
+					to: 'png',
+					gif_time: 25,
+					gif_loop: false
 				},
 				{
-					convertimage: {
-						to: 'gif',
-						gif_time: 75,
-						gif_loop: undefined
-					},
-					watermarkimage: {
-						elements: undefined
-					}
+					to: 'gif',
+					gif_time: 75,
+					gif_loop: undefined,
+					elements: undefined
 				},
 				{
-					convertimage: {
-						to: 'gif_animation',
-						gif_time: undefined,
-						gif_loop: undefined
-					},
-					watermarkimage: {
-						elements: []
-					}
+					to: 'gif_animation',
+					gif_time: undefined,
+					gif_loop: undefined,
+					elements: []
 				},
 				{
-					convertimage: {
-						to: 'heic'
-					},
-					upscaleimage: undefined,
-					removebackgroundimage: null,
-					watermarkimage: 5
+					to: 'heic'
 				},
-				{
-					convertimage: {},
-					upscaleimage: {},
-					removebackgroundimage: {},
-					watermarkimage: {}
-				}
+				{}
 			],
 			/** @type {Array<TaskSchema.TaskProcessToolOptionsInfered>} */
 			expectedToolOptions: [
 				{
-					convertimage: {
-						to: 'jpg',
-						gif_time: 50,
-						gif_loop: true
-					}
+					to: 'jpg',
+					gif_time: 50,
+					gif_loop: true
 				},
 				{
-					convertimage: {
-						to: 'png',
-						gif_time: 25,
-						gif_loop: false
-					}
+					to: 'png',
+					gif_time: 25,
+					gif_loop: false
 				},
 				{
-					convertimage: {
-						to: 'gif',
-						gif_time: 75,
-						gif_loop: true
-					}
+					to: 'gif',
+					gif_time: 75,
+					gif_loop: true
 				},
 				{
-					convertimage: {
-						to: 'gif_animation',
-						gif_time: 50,
-						gif_loop: true
-					}
+					to: 'gif_animation',
+					gif_time: 50,
+					gif_loop: true
 				},
 				{
-					convertimage: {
-						to: 'heic',
-						gif_time: 50,
-						gif_loop: true
-					}
+					to: 'heic',
+					gif_time: 50,
+					gif_loop: true
 				},
 				{
-					convertimage: {
-						to: 'jpg',
-						gif_time: 50,
-						gif_loop: true
-					}
+					to: 'jpg',
+					gif_time: 50,
+					gif_loop: true
 				}
 			]
 		};
@@ -2595,7 +2426,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 			);
 			await expect(
 				validateProcessToolOptionsSpy.returnValues[0]
-			).to.eventually.deep.equal(setup.expectedToolOptions[0].convertimage);
+			).to.eventually.deep.equal(setup.expectedToolOptions[0]);
 			expect(serverFieldStub.calledOnce).to.be.true;
 			expect(serverFieldStub.firstCall.args[0]).to.be.equal('/process');
 			expect(serverFieldStub.firstCall.args[1]).to.be.deep.equal({
@@ -2603,7 +2434,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 				tool: setup.tool,
 				files: setup.files,
 				...setup.expectedOptions[0],
-				...setup.expectedToolOptions[0].convertimage
+				...setup.expectedToolOptions[0]
 			});
 
 			genericOptionsValidatorSpy.resetHistory();
@@ -2636,7 +2467,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 			);
 			await expect(
 				validateProcessToolOptionsSpy.returnValues[0]
-			).to.eventually.deep.equal(setup.expectedToolOptions[1].convertimage);
+			).to.eventually.deep.equal(setup.expectedToolOptions[1]);
 			expect(serverFieldStub.calledOnce).to.be.true;
 			expect(serverFieldStub.firstCall.args[0]).to.be.equal('/process');
 			expect(serverFieldStub.firstCall.args[1]).to.be.deep.equal({
@@ -2644,7 +2475,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 				tool: setup.tool,
 				files: setup.files,
 				...setup.expectedOptions[1],
-				...setup.expectedToolOptions[1].convertimage
+				...setup.expectedToolOptions[1]
 			});
 
 			genericOptionsValidatorSpy.resetHistory();
@@ -2677,7 +2508,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 			);
 			await expect(
 				validateProcessToolOptionsSpy.returnValues[0]
-			).to.eventually.deep.equal(setup.expectedToolOptions[2].convertimage);
+			).to.eventually.deep.equal(setup.expectedToolOptions[2]);
 			expect(serverFieldStub.calledOnce).to.be.true;
 			expect(serverFieldStub.firstCall.args[0]).to.be.equal('/process');
 			expect(serverFieldStub.firstCall.args[1]).to.be.deep.equal({
@@ -2685,7 +2516,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 				tool: setup.tool,
 				files: setup.files,
 				...setup.expectedOptions[2],
-				...setup.expectedToolOptions[2].convertimage
+				...setup.expectedToolOptions[2]
 			});
 
 			genericOptionsValidatorSpy.resetHistory();
@@ -2718,7 +2549,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 			);
 			await expect(
 				validateProcessToolOptionsSpy.returnValues[0]
-			).to.eventually.deep.equal(setup.expectedToolOptions[3].convertimage);
+			).to.eventually.deep.equal(setup.expectedToolOptions[3]);
 			expect(serverFieldStub.calledOnce).to.be.true;
 			expect(serverFieldStub.firstCall.args[0]).to.be.equal('/process');
 			expect(serverFieldStub.firstCall.args[1]).to.be.deep.equal({
@@ -2726,7 +2557,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 				tool: setup.tool,
 				files: setup.files,
 				...setup.expectedOptions[3],
-				...setup.expectedToolOptions[3].convertimage
+				...setup.expectedToolOptions[3]
 			});
 
 			genericOptionsValidatorSpy.resetHistory();
@@ -2759,7 +2590,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 			);
 			await expect(
 				validateProcessToolOptionsSpy.returnValues[0]
-			).to.eventually.deep.equal(setup.expectedToolOptions[4].convertimage);
+			).to.eventually.deep.equal(setup.expectedToolOptions[4]);
 			expect(serverFieldStub.calledOnce).to.be.true;
 			expect(serverFieldStub.firstCall.args[0]).to.be.equal('/process');
 			expect(serverFieldStub.firstCall.args[1]).to.be.deep.equal({
@@ -2767,7 +2598,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 				tool: setup.tool,
 				files: setup.files,
 				...setup.expectedOptions[4],
-				...setup.expectedToolOptions[4].convertimage
+				...setup.expectedToolOptions[4]
 			});
 
 			genericOptionsValidatorSpy.resetHistory();
@@ -2800,7 +2631,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 			);
 			await expect(
 				validateProcessToolOptionsSpy.returnValues[0]
-			).to.eventually.deep.equal(setup.expectedToolOptions[5].convertimage);
+			).to.eventually.deep.equal(setup.expectedToolOptions[5]);
 			expect(serverFieldStub.calledOnce).to.be.true;
 			expect(serverFieldStub.firstCall.args[0]).to.be.equal('/process');
 			expect(serverFieldStub.firstCall.args[1]).to.be.deep.equal({
@@ -2808,7 +2639,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 				tool: setup.tool,
 				files: setup.files,
 				...setup.expectedOptions[5],
-				...setup.expectedToolOptions[5].convertimage
+				...setup.expectedToolOptions[5]
 			});
 		}
 	});
@@ -2917,41 +2748,31 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 					convertimage: null,
 					watermarkimage: null,
 					removebackgroundimage: null,
-					upscaleimage: {
-						multiplier: 4
-					}
+					multiplier: 4
 				},
 				{
 					convertimage: {},
 					watermarkimage: {},
 					removebackgroundimage: {},
-					upscaleimage: {
-						multiplier: 4
-					}
+					multiplier: 4
 				},
 				{
 					convertimage: undefined,
 					watermarkimage: undefined,
 					removebackgroundimage: undefined,
-					upscaleimage: {
-						multiplier: 2
-					}
+					multiplier: 2
 				},
 				{
 					convertimage: 9,
 					watermarkimage: 2,
 					removebackgroundimage: 1,
-					upscaleimage: {
-						multiplier: 2
-					}
+					multiplier: 2
 				},
 				{
 					convertimage: { to: 'gif', gif_loop: false },
 					watermarkimage: { elements: null },
 					removebackgroundimage: { notexist: true },
-					upscaleimage: {
-						multiplier: 4
-					}
+					multiplier: 4
 				},
 				{
 					convertimage: {
@@ -2963,42 +2784,28 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 					removebackgroundimage: {
 						abc: undefined
 					},
-					upscaleimage: {
-						multiplier: 2
-					}
+					multiplier: 2
 				}
 			],
 			/** @type {Array<TaskSchema.TaskProcessToolOptionsInfered>} */
 			expectedToolOptions: [
 				{
-					upscaleimage: {
-						multiplier: 4
-					}
+					multiplier: 4
 				},
 				{
-					upscaleimage: {
-						multiplier: 4
-					}
+					multiplier: 4
 				},
 				{
-					upscaleimage: {
-						multiplier: 2
-					}
+					multiplier: 2
 				},
 				{
-					upscaleimage: {
-						multiplier: 2
-					}
+					multiplier: 2
 				},
 				{
-					upscaleimage: {
-						multiplier: 4
-					}
+					multiplier: 4
 				},
 				{
-					upscaleimage: {
-						multiplier: 2
-					}
+					multiplier: 2
 				}
 			]
 		};
@@ -3042,7 +2849,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 			);
 			await expect(
 				validateProcessToolOptionsSpy.returnValues[0]
-			).to.eventually.deep.equal(setup.expectedToolOptions[0].upscaleimage);
+			).to.eventually.deep.equal(setup.expectedToolOptions[0]);
 			expect(serverFieldStub.calledOnce).to.be.true;
 			expect(serverFieldStub.firstCall.args[0]).to.be.equal('/process');
 			expect(serverFieldStub.firstCall.args[1]).to.be.deep.equal({
@@ -3050,7 +2857,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 				tool: setup.tool,
 				files: setup.files,
 				...setup.expectedOptions[0],
-				...setup.expectedToolOptions[0].upscaleimage
+				...setup.expectedToolOptions[0]
 			});
 
 			genericOptionsValidatorSpy.resetHistory();
@@ -3083,7 +2890,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 			);
 			await expect(
 				validateProcessToolOptionsSpy.returnValues[0]
-			).to.eventually.deep.equal(setup.expectedToolOptions[1].upscaleimage);
+			).to.eventually.deep.equal(setup.expectedToolOptions[1]);
 			expect(serverFieldStub.calledOnce).to.be.true;
 			expect(serverFieldStub.firstCall.args[0]).to.be.equal('/process');
 			expect(serverFieldStub.firstCall.args[1]).to.be.deep.equal({
@@ -3091,7 +2898,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 				tool: setup.tool,
 				files: setup.files,
 				...setup.expectedOptions[1],
-				...setup.expectedToolOptions[1].upscaleimage
+				...setup.expectedToolOptions[1]
 			});
 
 			genericOptionsValidatorSpy.resetHistory();
@@ -3124,7 +2931,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 			);
 			await expect(
 				validateProcessToolOptionsSpy.returnValues[0]
-			).to.eventually.deep.equal(setup.expectedToolOptions[2].upscaleimage);
+			).to.eventually.deep.equal(setup.expectedToolOptions[2]);
 			expect(serverFieldStub.calledOnce).to.be.true;
 			expect(serverFieldStub.firstCall.args[0]).to.be.equal('/process');
 			expect(serverFieldStub.firstCall.args[1]).to.be.deep.equal({
@@ -3132,7 +2939,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 				tool: setup.tool,
 				files: setup.files,
 				...setup.expectedOptions[2],
-				...setup.expectedToolOptions[2].upscaleimage
+				...setup.expectedToolOptions[2]
 			});
 
 			genericOptionsValidatorSpy.resetHistory();
@@ -3165,7 +2972,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 			);
 			await expect(
 				validateProcessToolOptionsSpy.returnValues[0]
-			).to.eventually.deep.equal(setup.expectedToolOptions[3].upscaleimage);
+			).to.eventually.deep.equal(setup.expectedToolOptions[3]);
 			expect(serverFieldStub.calledOnce).to.be.true;
 			expect(serverFieldStub.firstCall.args[0]).to.be.equal('/process');
 			expect(serverFieldStub.firstCall.args[1]).to.be.deep.equal({
@@ -3173,7 +2980,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 				tool: setup.tool,
 				files: setup.files,
 				...setup.expectedOptions[3],
-				...setup.expectedToolOptions[3].upscaleimage
+				...setup.expectedToolOptions[3]
 			});
 
 			genericOptionsValidatorSpy.resetHistory();
@@ -3206,7 +3013,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 			);
 			await expect(
 				validateProcessToolOptionsSpy.returnValues[0]
-			).to.eventually.deep.equal(setup.expectedToolOptions[4].upscaleimage);
+			).to.eventually.deep.equal(setup.expectedToolOptions[4]);
 			expect(serverFieldStub.calledOnce).to.be.true;
 			expect(serverFieldStub.firstCall.args[0]).to.be.equal('/process');
 			expect(serverFieldStub.firstCall.args[1]).to.be.deep.equal({
@@ -3214,7 +3021,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 				tool: setup.tool,
 				files: setup.files,
 				...setup.expectedOptions[4],
-				...setup.expectedToolOptions[4].upscaleimage
+				...setup.expectedToolOptions[4]
 			});
 
 			genericOptionsValidatorSpy.resetHistory();
@@ -3247,7 +3054,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 			);
 			await expect(
 				validateProcessToolOptionsSpy.returnValues[0]
-			).to.eventually.deep.equal(setup.expectedToolOptions[5].upscaleimage);
+			).to.eventually.deep.equal(setup.expectedToolOptions[5]);
 			expect(serverFieldStub.calledOnce).to.be.true;
 			expect(serverFieldStub.firstCall.args[0]).to.be.equal('/process');
 			expect(serverFieldStub.firstCall.args[1]).to.be.deep.equal({
@@ -3255,7 +3062,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 				tool: setup.tool,
 				files: setup.files,
 				...setup.expectedOptions[5],
-				...setup.expectedToolOptions[5].upscaleimage
+				...setup.expectedToolOptions[5]
 			});
 		}
 	});
@@ -3362,15 +3169,13 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 			toolOptions: [
 				{
 					convertimage: null,
-					watermarkimage: {
-						elements: [
-							{
-								type: 'text',
-								text: 'branded',
-								gravity: 'South'
-							}
-						]
-					},
+					elements: [
+						{
+							type: 'text',
+							text: 'branded',
+							gravity: 'South'
+						}
+					],
 					removebackgroundimage: null,
 					upscaleimage: {
 						multiplier: 4
@@ -3378,21 +3183,19 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 				},
 				{
 					convertimage: {},
-					watermarkimage: {
-						elements: [
-							{
-								type: 'text',
-								text: 'brandedxyz',
-								gravity: 'South',
-								vertical_adjustment_percent: 25,
-								horizontal_adjustment_percent: 33,
-								rotation: 15,
-								font_family: 'Courier',
-								transparency: 50,
-								mosaic: true
-							}
-						]
-					},
+					elements: [
+						{
+							type: 'text',
+							text: 'brandedxyz',
+							gravity: 'South',
+							vertical_adjustment_percent: 25,
+							horizontal_adjustment_percent: 33,
+							rotation: 15,
+							font_family: 'Courier',
+							transparency: 50,
+							mosaic: true
+						}
+					],
 					removebackgroundimage: {},
 					upscaleimage: {
 						multiplier: 4
@@ -3400,24 +3203,22 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 				},
 				{
 					convertimage: undefined,
-					watermarkimage: {
-						elements: [
-							{
-								type: 'text',
-								text: 'brandedxyz',
-								gravity: undefined,
-								vertical_adjustment_percent: undefined,
-								horizontal_adjustment_percent: undefined,
-								rotation: undefined,
-								font_family: undefined,
-								font_style: undefined,
-								font_size: undefined,
-								font_color: undefined,
-								transparency: undefined,
-								mosaic: undefined
-							}
-						]
-					},
+					elements: [
+						{
+							type: 'text',
+							text: 'brandedxyz',
+							gravity: undefined,
+							vertical_adjustment_percent: undefined,
+							horizontal_adjustment_percent: undefined,
+							rotation: undefined,
+							font_family: undefined,
+							font_style: undefined,
+							font_size: undefined,
+							font_color: undefined,
+							transparency: undefined,
+							mosaic: undefined
+						}
+					],
 					removebackgroundimage: undefined,
 					upscaleimage: {
 						multiplier: 2
@@ -3425,22 +3226,20 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 				},
 				{
 					convertimage: 9,
-					watermarkimage: {
-						elements: [
-							{
-								type: 'image',
-								text: 'xyz',
-								image: 'lovelyimage.jpg',
-								gravity: 'Center',
-								vertical_adjustment_percent: undefined,
-								horizontal_adjustment_percent: undefined,
-								font_family: 'Times New Roman',
-								font_style: 'Italic',
-								font_size: 25,
-								font_color: '#ffffff'
-							}
-						]
-					},
+					elements: [
+						{
+							type: 'image',
+							text: 'xyz',
+							image: 'lovelyimage.jpg',
+							gravity: 'Center',
+							vertical_adjustment_percent: undefined,
+							horizontal_adjustment_percent: undefined,
+							font_family: 'Times New Roman',
+							font_style: 'Italic',
+							font_size: 25,
+							font_color: '#ffffff'
+						}
+					],
 					removebackgroundimage: 1,
 					upscaleimage: {
 						multiplier: 2
@@ -3448,14 +3247,12 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 				},
 				{
 					convertimage: { to: 'gif', gif_loop: false },
-					watermarkimage: {
-						elements: [
-							{
-								type: 'image',
-								image: 'xzlovelyimage.jpg'
-							}
-						]
-					},
+					elements: [
+						{
+							type: 'image',
+							image: 'xzlovelyimage.jpg'
+						}
+					],
 					removebackgroundimage: { notexist: true },
 					upscaleimage: {
 						multiplier: 4
@@ -3465,21 +3262,19 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 					convertimage: {
 						to: 'mp3'
 					},
-					watermarkimage: {
-						elements: [
-							{
-								type: 'text',
-								text: 'loremipsum',
-								gravity: 'Center',
-								vertical_adjustment_percent: undefined,
-								horizontal_adjustment_percent: undefined,
-								font_family: 'Arial',
-								font_style: null,
-								font_size: undefined,
-								mosaic: undefined
-							}
-						]
-					},
+					elements: [
+						{
+							type: 'text',
+							text: 'loremipsum',
+							gravity: 'Center',
+							vertical_adjustment_percent: undefined,
+							horizontal_adjustment_percent: undefined,
+							font_family: 'Arial',
+							font_style: null,
+							font_size: undefined,
+							mosaic: undefined
+						}
+					],
 					removebackgroundimage: {
 						abc: undefined
 					},
@@ -3491,125 +3286,113 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 			/** @type {Array<TaskSchema.TaskProcessToolOptionsInfered>} */
 			expectedToolOptions: [
 				{
-					watermarkimage: {
-						elements: [
-							{
-								type: 'text',
-								text: 'branded',
-								gravity: 'South',
-								vertical_adjustment_percent: 0,
-								horizontal_adjustment_percent: 0,
-								rotation: 0,
-								font_family: 'Arial',
-								font_style: null,
-								font_size: 14,
-								font_color: '#000000',
-								transparency: 100,
-								mosaic: false
-							}
-						]
-					}
+					elements: [
+						{
+							type: 'text',
+							text: 'branded',
+							gravity: 'South',
+							vertical_adjustment_percent: 0,
+							horizontal_adjustment_percent: 0,
+							rotation: 0,
+							font_family: 'Arial',
+							font_style: null,
+							font_size: 14,
+							font_color: '#000000',
+							transparency: 100,
+							mosaic: false
+						}
+					]
 				},
 				{
-					watermarkimage: {
-						elements: [
-							{
-								type: 'text',
-								text: 'brandedxyz',
-								gravity: 'South',
-								vertical_adjustment_percent: 25,
-								horizontal_adjustment_percent: 33,
-								rotation: 15,
-								font_family: 'Courier',
-								font_style: null,
-								font_size: 14,
-								font_color: '#000000',
-								transparency: 50,
-								mosaic: true
-							}
-						]
-					}
+					elements: [
+						{
+							type: 'text',
+							text: 'brandedxyz',
+							gravity: 'South',
+							vertical_adjustment_percent: 25,
+							horizontal_adjustment_percent: 33,
+							rotation: 15,
+							font_family: 'Courier',
+							font_style: null,
+							font_size: 14,
+							font_color: '#000000',
+							transparency: 50,
+							mosaic: true
+						}
+					]
 				},
 				{
-					watermarkimage: {
-						elements: [
-							{
-								type: 'text',
-								text: 'brandedxyz',
-								gravity: 'Center',
-								vertical_adjustment_percent: 0,
-								horizontal_adjustment_percent: 0,
-								rotation: 0,
-								font_family: 'Arial',
-								font_style: null,
-								font_size: 14,
-								font_color: '#000000',
-								transparency: 100,
-								mosaic: false
-							}
-						]
-					}
+					elements: [
+						{
+							type: 'text',
+							text: 'brandedxyz',
+							gravity: 'Center',
+							vertical_adjustment_percent: 0,
+							horizontal_adjustment_percent: 0,
+							rotation: 0,
+							font_family: 'Arial',
+							font_style: null,
+							font_size: 14,
+							font_color: '#000000',
+							transparency: 100,
+							mosaic: false
+						}
+					]
 				},
 				{
-					watermarkimage: {
-						elements: [
-							{
-								type: 'image',
-								text: 'xyz',
-								image: 'lovelyimage.jpg',
-								gravity: 'Center',
-								vertical_adjustment_percent: 0,
-								horizontal_adjustment_percent: 0,
-								rotation: 0,
-								font_family: 'Times New Roman',
-								font_style: 'Italic',
-								font_size: 25,
-								font_color: '#ffffff',
-								transparency: 100,
-								mosaic: false
-							}
-						]
-					}
+					elements: [
+						{
+							type: 'image',
+							text: 'xyz',
+							image: 'lovelyimage.jpg',
+							gravity: 'Center',
+							vertical_adjustment_percent: 0,
+							horizontal_adjustment_percent: 0,
+							rotation: 0,
+							font_family: 'Times New Roman',
+							font_style: 'Italic',
+							font_size: 25,
+							font_color: '#ffffff',
+							transparency: 100,
+							mosaic: false
+						}
+					]
 				},
 				{
-					watermarkimage: {
-						elements: [
-							{
-								type: 'image',
-								image: 'xzlovelyimage.jpg',
-								gravity: 'Center',
-								vertical_adjustment_percent: 0,
-								horizontal_adjustment_percent: 0,
-								rotation: 0,
-								font_family: 'Arial',
-								font_style: null,
-								font_size: 14,
-								font_color: '#000000',
-								transparency: 100,
-								mosaic: false
-							}
-						]
-					}
+					elements: [
+						{
+							type: 'image',
+							image: 'xzlovelyimage.jpg',
+							gravity: 'Center',
+							vertical_adjustment_percent: 0,
+							horizontal_adjustment_percent: 0,
+							rotation: 0,
+							font_family: 'Arial',
+							font_style: null,
+							font_size: 14,
+							font_color: '#000000',
+							transparency: 100,
+							mosaic: false
+						}
+					]
 				},
 				{
-					watermarkimage: {
-						elements: [
-							{
-								type: 'text',
-								text: 'loremipsum',
-								gravity: 'Center',
-								vertical_adjustment_percent: 0,
-								horizontal_adjustment_percent: 0,
-								rotation: 0,
-								font_family: 'Arial',
-								font_style: null,
-								font_size: 14,
-								font_color: '#000000',
-								transparency: 100,
-								mosaic: false
-							}
-						]
-					}
+					elements: [
+						{
+							type: 'text',
+							text: 'loremipsum',
+							gravity: 'Center',
+							vertical_adjustment_percent: 0,
+							horizontal_adjustment_percent: 0,
+							rotation: 0,
+							font_family: 'Arial',
+							font_style: null,
+							font_size: 14,
+							font_color: '#000000',
+							transparency: 100,
+							mosaic: false
+						}
+					]
 				}
 			]
 		};
@@ -3653,7 +3436,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 			);
 			await expect(
 				validateProcessToolOptionsSpy.returnValues[0]
-			).to.eventually.deep.equal(setup.expectedToolOptions[0].watermarkimage);
+			).to.eventually.deep.equal(setup.expectedToolOptions[0]);
 			expect(serverFieldStub.calledOnce).to.be.true;
 			expect(serverFieldStub.firstCall.args[0]).to.be.equal('/process');
 			expect(serverFieldStub.firstCall.args[1]).to.be.deep.equal({
@@ -3661,7 +3444,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 				tool: setup.tool,
 				files: setup.files,
 				...setup.expectedOptions[0],
-				...setup.expectedToolOptions[0].watermarkimage
+				...setup.expectedToolOptions[0]
 			});
 
 			genericOptionsValidatorSpy.resetHistory();
@@ -3694,7 +3477,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 			);
 			await expect(
 				validateProcessToolOptionsSpy.returnValues[0]
-			).to.eventually.deep.equal(setup.expectedToolOptions[1].watermarkimage);
+			).to.eventually.deep.equal(setup.expectedToolOptions[1]);
 			expect(serverFieldStub.calledOnce).to.be.true;
 			expect(serverFieldStub.firstCall.args[0]).to.be.equal('/process');
 			expect(serverFieldStub.firstCall.args[1]).to.be.deep.equal({
@@ -3702,7 +3485,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 				tool: setup.tool,
 				files: setup.files,
 				...setup.expectedOptions[1],
-				...setup.expectedToolOptions[1].watermarkimage
+				...setup.expectedToolOptions[1]
 			});
 
 			genericOptionsValidatorSpy.resetHistory();
@@ -3735,7 +3518,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 			);
 			await expect(
 				validateProcessToolOptionsSpy.returnValues[0]
-			).to.eventually.deep.equal(setup.expectedToolOptions[2].watermarkimage);
+			).to.eventually.deep.equal(setup.expectedToolOptions[2]);
 			expect(serverFieldStub.calledOnce).to.be.true;
 			expect(serverFieldStub.firstCall.args[0]).to.be.equal('/process');
 			expect(serverFieldStub.firstCall.args[1]).to.be.deep.equal({
@@ -3743,7 +3526,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 				tool: setup.tool,
 				files: setup.files,
 				...setup.expectedOptions[2],
-				...setup.expectedToolOptions[2].watermarkimage
+				...setup.expectedToolOptions[2]
 			});
 
 			genericOptionsValidatorSpy.resetHistory();
@@ -3776,7 +3559,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 			);
 			await expect(
 				validateProcessToolOptionsSpy.returnValues[0]
-			).to.eventually.deep.equal(setup.expectedToolOptions[3].watermarkimage);
+			).to.eventually.deep.equal(setup.expectedToolOptions[3]);
 			expect(serverFieldStub.calledOnce).to.be.true;
 			expect(serverFieldStub.firstCall.args[0]).to.be.equal('/process');
 			expect(serverFieldStub.firstCall.args[1]).to.be.deep.equal({
@@ -3784,7 +3567,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 				tool: setup.tool,
 				files: setup.files,
 				...setup.expectedOptions[3],
-				...setup.expectedToolOptions[3].watermarkimage
+				...setup.expectedToolOptions[3]
 			});
 
 			genericOptionsValidatorSpy.resetHistory();
@@ -3817,7 +3600,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 			);
 			await expect(
 				validateProcessToolOptionsSpy.returnValues[0]
-			).to.eventually.deep.equal(setup.expectedToolOptions[4].watermarkimage);
+			).to.eventually.deep.equal(setup.expectedToolOptions[4]);
 			expect(serverFieldStub.calledOnce).to.be.true;
 			expect(serverFieldStub.firstCall.args[0]).to.be.equal('/process');
 			expect(serverFieldStub.firstCall.args[1]).to.be.deep.equal({
@@ -3825,7 +3608,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 				tool: setup.tool,
 				files: setup.files,
 				...setup.expectedOptions[4],
-				...setup.expectedToolOptions[4].watermarkimage
+				...setup.expectedToolOptions[4]
 			});
 
 			genericOptionsValidatorSpy.resetHistory();
@@ -3858,7 +3641,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 			);
 			await expect(
 				validateProcessToolOptionsSpy.returnValues[0]
-			).to.eventually.deep.equal(setup.expectedToolOptions[5].watermarkimage);
+			).to.eventually.deep.equal(setup.expectedToolOptions[5]);
 			expect(serverFieldStub.calledOnce).to.be.true;
 			expect(serverFieldStub.firstCall.args[0]).to.be.equal('/process');
 			expect(serverFieldStub.firstCall.args[1]).to.be.deep.equal({
@@ -3866,7 +3649,7 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 				tool: setup.tool,
 				files: setup.files,
 				...setup.expectedOptions[5],
-				...setup.expectedToolOptions[5].watermarkimage
+				...setup.expectedToolOptions[5]
 			});
 		}
 	});

@@ -21,7 +21,7 @@ async function validateProcessToolOptions(tool, options) {
 		throw new Error(`Unsupported tool: ${tool}`);
 	}
 
-	return validator(options?.[tool]);
+	return validator(options);
 }
 
 // We need to export with this behaviour to make sinon working in testing environment
