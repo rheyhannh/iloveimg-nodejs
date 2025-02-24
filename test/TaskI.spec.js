@@ -1116,6 +1116,44 @@ describe('ILoveIMGApi TaskI.deleteFile() Tests', function () {
 		expect(fixedServerSpy3.calledOnce).to.be.true;
 		expect(fixedServerSpy3.firstCall.args[0]).to.be.equal('/upload');
 	});
+
+	it('should update #files on success API response', async function () {
+		const setup = {
+			server: {
+				delete: async () => ({
+					data: { success: true }
+				})
+			},
+			tool: 'removebackgroundimage',
+			task_id: 'fake-taskid',
+			files: [
+				{ server_filename: 'lorem.jpg', filename: 'image.jpg' },
+				{ server_filename: 'ipsum.jpg', filename: 'image_two.jpg' },
+				{ server_filename: 'dolor.jpg', filename: 'image-three.jpg' }
+			]
+		};
+
+		task._setTool(setup.tool);
+		task._setTaskId(setup.task_id);
+		task._setServer(setup.server);
+		task._setUploadedFiles(setup.files);
+
+		const fixedServerSpy = sinon.spy(setup.server, 'delete');
+		await task.deleteFile({ server_filename: 'ipsum.jpg' });
+
+		expect(fixedServerSpy.calledOnce).to.be.true;
+		expect(fixedServerSpy.firstCall.args[0]).to.be.equal('/upload');
+		expect(fixedServerSpy.firstCall.args[1]).to.be.deep.equal({
+			data: {
+				task: setup.task_id,
+				server_filename: 'ipsum.jpg'
+			}
+		});
+		expect(task.getUploadedFiles()).to.be.deep.equal([
+			{ server_filename: 'lorem.jpg', filename: 'image.jpg' },
+			{ server_filename: 'dolor.jpg', filename: 'image-three.jpg' }
+		]);
+	});
 });
 
 describe('ILoveIMGApi TaskI.download() Tests', function () {

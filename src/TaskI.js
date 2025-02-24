@@ -199,6 +199,12 @@ class TaskI {
 			});
 
 			if (isDebug) return response.data;
+			else {
+				const server_filename = _vOptions.server_filename;
+				this.#files = this.#files.filter(
+					(file) => file.server_filename !== server_filename
+				);
+			}
 		} catch (error) {
 			classifyError(error);
 		}
