@@ -130,7 +130,7 @@ class TaskI {
 	/**
 	 * Upload a image for this task.
 	 * @param {TaskSchema.TaskAddFileGenericOptionsInfered} options Generic options for uploading image.
-	 * @returns {Promise<string>} Promise resolving a server filename as a string. If `debug` is enabled, it resolves with an object containing request information instead.
+	 * @returns {Promise<TaskSchema.TaskAddFileReturnTypeInfered>} Promise resolving object containing server filename. If `debug` is enabled, it resolves with an object containing request information instead.
 	 * @throws {Error} If requests failed or task id and server are not resolved.
 	 * @throws {import('zod').ZodError} If required options are missing or use invalid options.
 	 */

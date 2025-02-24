@@ -4,6 +4,7 @@ import {
 	TaskStartGenericOptionsInfered,
 	TaskStartReturnTypeInfered,
 	TaskAddFileGenericOptionsInfered,
+	TaskAddFileReturnTypeInfered,
 	TaskRemoveFileGenericOptionsInfered,
 	TaskProcessGenericOptionsInfered,
 	TaskProcessToolOptionsInfered,
@@ -65,7 +66,7 @@ declare class TaskI<T extends ToolTypesInfered> {
 	/**
 	 * Upload a image for this task by making request to `ILoveIMG` servers.
 	 * @param options Generic options for uploading image.
-	 * @returns Promise resolve with server filename.
+	 * @returns Promise resolve with object containing server filename.
 	 * @throws `Error` If request fails or task id and server are not resolved.
 	 * @throws `ZodError` If required `options` are missing or invalid.
 	 */
@@ -78,8 +79,10 @@ declare class TaskI<T extends ToolTypesInfered> {
 		options: Omit<TaskAddFileGenericOptionsInfered, 'debug'> & {
 			/** Enables or disables debug mode, default is `false`. */ debug: false;
 		}
-	): Promise<string>;
-	addFile(options: TaskAddFileGenericOptionsInfered): Promise<string>;
+	): Promise<TaskAddFileReturnTypeInfered>;
+	addFile(
+		options: TaskAddFileGenericOptionsInfered
+	): Promise<TaskAddFileReturnTypeInfered>;
 
 	/**
 	 * Delete uploaded image on this task by making request to `ILoveIMG` servers.
