@@ -21,19 +21,19 @@ import { SelfSignedTokenOptionsInfered } from './schema/Auth';
  * ```
  */
 declare class Auth {
-    private static readonly TIME_DELAY: number;
-    private token?: string;
-    private readonly #publicKey: string;
-    private readonly #secretKey?: string;
-    private #axiosInstance: AxiosInstance;
-    private #tokenOptions: SelfSignedTokenOptionsInfered;
+	private static readonly TIME_DELAY: number;
+	private token?: string;
+	private readonly #publicKey: string;
+	private readonly #secretKey?: string;
+	private #axiosInstance: AxiosInstance;
+	private #tokenOptions: SelfSignedTokenOptionsInfered;
 
-    /**
-     * Creates an instance that issuing, verify and refresh the JWT used to `ILoveApi` server.
-     * @param publicKey Projects public key used for authentication, obtained from {@link https://www.iloveapi.com/user/projects here}.
-     * @param secretKey Projects secret key used for local token generation, obtained from {@link https://www.iloveapi.com/user/projects here}.
-     * @param params Additional parameters.
-     * @throws `Error` If publicKey is not provided or invalid.
+	/**
+	 * Creates an instance that issuing, verify and refresh the JWT used to `ILoveApi` server.
+	 * @param publicKey Projects public key used for authentication, obtained from {@link https://www.iloveapi.com/user/projects here}.
+	 * @param secretKey Projects secret key used for local token generation, obtained from {@link https://www.iloveapi.com/user/projects here}.
+	 * @param params Additional parameters.
+	 * @throws `Error` If publicKey is not provided or invalid.
 	 * @example
 	 * ```js
 	 * import { Auth } from '@rheyhannh/iloveimg-nodejs';
@@ -46,25 +46,29 @@ declare class Auth {
 	 * // You can make request to `ILoveApi` server using the token.
 	 * // Make sure to add token to `Authorization` header with 'Bearer' prefix.
 	 * ```
-     * @see {@link https://www.iloveapi.com/docs/api-reference#authentication ILoveApi Authentication Docs}
-     */
-    constructor(publicKey: string, secretKey?: string, params?: Partial<SelfSignedTokenOptionsInfered>);
+	 * @see {@link https://www.iloveapi.com/docs/api-reference#authentication ILoveApi Authentication Docs}
+	 */
+	constructor(
+		publicKey: string,
+		secretKey?: string,
+		params?: Partial<SelfSignedTokenOptionsInfered>
+	);
 
-    /**
-     * Retrieves a valid authentication token, either from cache, local generation, or from `ILoveApi` server.
-     * When `secretKey` provided it will generate `self-signed` authentication token, otherwise authentication token will retrieved from `ILoveApi` server.
-     * @returns A promise resolving to a valid JWT token.
-     * @throws `ILoveApiError` | `NetworkError` | `Error` If authentication token cannot be retrieved.
-     * @see {@link https://www.iloveapi.com/docs/api-reference#authentication ILoveApi Authentication Docs}
-     */
-    getToken(): Promise<string>;
+	/**
+	 * Retrieves a valid authentication token, either from cache, local generation, or from `ILoveApi` server.
+	 * When `secretKey` provided it will generate `self-signed` authentication token, otherwise authentication token will retrieved from `ILoveApi` server.
+	 * @returns A promise resolving to a valid JWT token.
+	 * @throws `ILoveApiError` | `NetworkError` | `Error` If authentication token cannot be retrieved.
+	 * @see {@link https://www.iloveapi.com/docs/api-reference#authentication ILoveApi Authentication Docs}
+	 */
+	getToken(): Promise<string>;
 
-    /**
-     * Verifies if the current (cached) token is valid and not expired.
-     * If invalid, it resets the current token.
-     * @returns The decoded JWT payload if exist and valid, otherwise undefined.
-     */
-    verifyToken(): JWTPayloadProps | undefined;
+	/**
+	 * Verifies if the current (cached) token is valid and not expired.
+	 * If invalid, it resets the current token.
+	 * @returns The decoded JWT payload if exist and valid, otherwise undefined.
+	 */
+	verifyToken(): JWTPayloadProps | undefined;
 }
 
 export default Auth;
@@ -73,10 +77,10 @@ export default Auth;
  * Defines the properties of the self-signed JWT payload.
  */
 export interface JWTPayloadProps {
-    iss: string;
-    iat: number;
-    nbf: number;
-    exp: number;
-    jti: string;
-    file_encryption_key?: string;
+	iss: string;
+	iat: number;
+	nbf: number;
+	exp: number;
+	jti: string;
+	file_encryption_key?: string;
 }

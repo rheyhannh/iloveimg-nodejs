@@ -1,10 +1,6 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
-import {
-	ILoveApiError,
-	NetworkError,
-	classifyError
-} from '../src/Error.js';
+import { ILoveApiError, NetworkError, classifyError } from '../src/Error.js';
 
 describe('ILoveIMGApi Error.classifyError() Tests', function () {
 	it('should throw ILoveApiError with response message', function () {
