@@ -7,7 +7,53 @@ on:
     branches: [ "main" ]
 
 jobs:
+  format:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [22.x]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🛠️ Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: 📥 Download and clean install dependencies
+        run: npm ci
+
+      - name: 🧹 Format code with Prettier
+        run: npm run format
+
+  lint:
+    needs: format
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [22.x]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🛠️ Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: 📥 Download and clean install dependencies
+        run: npm ci
+
+      - name: 🔍 Lint code using ESLint
+        run: npm run lint:strict
+
   test:
+    needs: [format, lint]
     strategy:
       matrix:
         os: [ubuntu-latest]
