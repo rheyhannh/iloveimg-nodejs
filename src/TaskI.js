@@ -146,12 +146,22 @@ class TaskI {
 		 */
 		const _vOptions =
 			await TaskSchema.TaskAddFileGenericOptions.parseAsync(options);
+		const isDebug = !!_vOptions?.debug;
 
 		try {
 			const response = await this.#server.post('/upload', {
 				task: this.#task_id,
 				..._vOptions
 			});
+
+			if (!isDebug) {
+				if (!response.data.server_filename) {
+					throw new Error('Invalid response: missing required fields');
+				}
+
+				const { server_filename } = response.data;
+				this.#files.push({ server_filename, filename: _vOptions.filename });
+			}
 
 			return response.data;
 		} catch (error) {
@@ -465,4 +475,3 @@ class TaskI {
 }
 
 export default TaskI;
-

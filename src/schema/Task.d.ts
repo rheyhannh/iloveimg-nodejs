@@ -50,6 +50,11 @@ export type TaskAddFileGenericOptionsInfered = {
 	 */
 	cloud_file: string;
 	/**
+	 * Original filename, make sure use correct file extension.
+	 * - Example: `myimage.jpg`
+	 */
+	filename: string;
+	/**
 	 * Enables or disables debug mode, default are `false`. When set to `true`,
 	 * - No credits will be deducted from your project.
 	 * - No actual processing will occur, `ILoveApi` only return response from your request details.
@@ -106,9 +111,8 @@ export type TaskProcessRequiredOptionsInfered = {
 		 */
 		server_filename: string;
 		/**
-		 * Filename that can you customized, make sure extensions are correct.
-		 * This will be used as default `output_filename` when you dont specify it.
-		 * - Ex: `john_upscaledimage_1.jpg`
+		 * Original filename, make sure use correct file extension.
+		 * - Example: `myimage.jpg`
 		 */
 		filename: string;
 	}[];

@@ -56,7 +56,7 @@ const task = iloveimg.newTask('convertimage');
 
 task.start()
   .then(({ task_id, server, remaining_files }) => {
-      return task.addFile({ cloud_file: 'https://i.imgur.com/awesome.jpeg' });
+      return task.addFile({ cloud_file: 'https://i.imgur.com/awesome.jpeg', filename: 'awesome.jpeg' });
   })
   .then(({ server_filename }) => {
       return task.process();
@@ -74,7 +74,7 @@ const iloveimg = new ILoveIMGApi('publicKey', 'secretKey');
 const task = iloveimg.newTask('convertimage');
 
 await task.start();
-await task.addFile({ cloud_file: 'https://i.imgur.com/awesome.jpeg' });
+await task.addFile({ cloud_file: 'https://i.imgur.com/awesome.jpeg', filename: 'awesome.jpeg' });
 await task.process();
 
 const result = await task.download(); // AxiosResponse
@@ -149,7 +149,7 @@ const task = iloveimg.newTask('upscaleimage');
 
 // You need to call start() and add some files first otherwise it will return undefined.
 await task.start();
-await task.addFile({ cloud_file: 'https://i.imgur.com/awesome.jpeg' });
+await task.addFile({ cloud_file: 'https://i.imgur.com/awesome.jpeg', filename: 'awesome.jpeg' });
 
 const files = task.getUploadedFiles(); // An array containing uploaded files
 console.log(files[0].server_filename) // ex:'thispropassignedbyiloveimgserver.jpeg'
@@ -172,7 +172,7 @@ const iloveimg = new ILoveIMGApi('publicKey', 'secretKey');
 const task = iloveimg.newTask('upscaleimage');
 
 await task.start();
-await task.addFile({ cloud_file: 'https://i.imgur.com/awesome.jpeg' });
+await task.addFile({ cloud_file: 'https://i.imgur.com/awesome.jpeg', filename: 'awesome.jpeg' });
 
 const files = task.getUploadedFiles();
 console.log(files[0].server_filename) // ex:'xyz.jpeg'
@@ -212,7 +212,7 @@ const upscaleOptions = {
     multiplier: 4
 };
 
-await task.addFile({ cloud_file: 'https://i.imgur.com/awesome.jpeg' });
+await task.addFile({ cloud_file: 'https://i.imgur.com/awesome.jpeg', filename: 'awesome.jpeg' });
 await task.process(options, upscaleOptions);
 ```
 

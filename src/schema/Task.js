@@ -57,6 +57,11 @@ export const TaskAddFileGenericOptions = z.object({
 	 */
 	cloud_file: z.string(),
 	/**
+	 * Original filename, make sure use correct file extension.
+	 * - Example: `myimage.jpg`
+	 */
+	filename: z.string(),
+	/**
 	 * Enables or disables debug mode, default are `false`. When set to `true`,
 	 * - No credits will be deducted from your project.
 	 * - No actual processing will occur, `ILoveApi` only return response from your request details.
@@ -119,9 +124,8 @@ export const TaskProcessRequiredOptions = z.object({
 				 */
 				server_filename: z.string(),
 				/**
-				 * Filename that can you customized, make sure extensions are correct.
-				 * This will be used as default `output_filename` when you dont specify it.
-				 * - Ex: `john_upscaledimage_1.jpg`
+				 * Original filename, make sure use correct file extension.
+				 * - Example: `myimage.jpg`
 				 */
 				filename: z.string()
 			})

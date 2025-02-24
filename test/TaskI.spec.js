@@ -583,6 +583,7 @@ describe('ILoveIMGApi TaskI.addFile() Tests', function () {
 
 		let options = /** @type {TaskSchema.TaskAddFileGenericOptionsInfered} */ ({
 			cloud_file: 'https://i.imgur.com/awesome.jpeg',
+			filename: 'awesome.jpeg',
 			debug: true
 		});
 
@@ -606,6 +607,35 @@ describe('ILoveIMGApi TaskI.addFile() Tests', function () {
 		).to.eventually.deep.equal(options);
 	});
 
+	it('should throw Error when missing required fields on API response', async function () {
+		const setup = {
+			server: {
+				post: async () => ({
+					data: {
+						server_filename: undefined
+					}
+				})
+			},
+			tool: 'removebackgroundimage',
+			task_id: 'fake-taskid'
+		};
+
+		task._setTool(setup.tool);
+		task._setTaskId(setup.task_id);
+		task._setServer(setup.server);
+
+		const fixedServerSpy = sinon.spy(setup.server, 'post');
+
+		await expect(
+			task.addFile({
+				cloud_file: 'https://github.com/image.jpg',
+				filename: 'image.jpg'
+			})
+		).to.be.rejectedWith(Error, 'Invalid response: missing required fields');
+		expect(fixedServerSpy.calledOnce).to.be.true;
+		expect(fixedServerSpy.firstCall.args[0]).to.be.equal('/upload');
+	});
+
 	it('should catch generic Error then rethrown error with classifyError()', async function () {
 		const setup = {
 			server: {
@@ -624,7 +654,10 @@ describe('ILoveIMGApi TaskI.addFile() Tests', function () {
 		const fixedServerSpy = sinon.spy(setup.server, 'post');
 
 		await expect(
-			task.addFile({ cloud_file: 'https://github.com/image.jpg' })
+			task.addFile({
+				cloud_file: 'https://github.com/image.jpg',
+				filename: 'image.jpg'
+			})
 		).to.be.rejectedWith(Error, 'Simulating generic error');
 		expect(fixedServerSpy.calledOnce).to.be.true;
 		expect(fixedServerSpy.firstCall.args[0]).to.be.equal('/upload');
@@ -660,7 +693,10 @@ describe('ILoveIMGApi TaskI.addFile() Tests', function () {
 		const fixedServerSpy = sinon.spy(setup.server[0], 'post');
 		task._setServer(setup.server[0]);
 		await expect(
-			task.addFile({ cloud_file: 'https://github.com/image.jpg' })
+			task.addFile({
+				cloud_file: 'https://github.com/image.jpg',
+				filename: 'image.jpg'
+			})
 		).to.be.rejectedWith(NetworkError, 'No response received from the server.');
 
 		expect(fixedServerSpy.calledOnce).to.be.true;
@@ -670,7 +706,10 @@ describe('ILoveIMGApi TaskI.addFile() Tests', function () {
 		const fixedServerSpy1 = sinon.spy(setup.server[1], 'post');
 		task._setServer(setup.server[1]);
 		await expect(
-			task.addFile({ cloud_file: 'https://github.com/image.jpg' })
+			task.addFile({
+				cloud_file: 'https://github.com/image.jpg',
+				filename: 'image.jpg'
+			})
 		).to.be.rejectedWith(
 			NetworkError,
 			'An error occurred while setting up the request.'
@@ -744,7 +783,10 @@ describe('ILoveIMGApi TaskI.addFile() Tests', function () {
 		const fixedServerSpy = sinon.spy(setup.server[0], 'post');
 		task._setServer(setup.server[0]);
 		await expect(
-			task.addFile({ cloud_file: 'https://github.com/image.jpg' })
+			task.addFile({
+				cloud_file: 'https://github.com/image.jpg',
+				filename: 'image.jpg'
+			})
 		).to.be.rejectedWith(
 			ILoveApiError,
 			'Unauthorized (Status: 401, Code: 666)'
@@ -756,7 +798,10 @@ describe('ILoveIMGApi TaskI.addFile() Tests', function () {
 		const fixedServerSpy1 = sinon.spy(setup.server[1], 'post');
 		task._setServer(setup.server[1]);
 		await expect(
-			task.addFile({ cloud_file: 'https://github.com/image.jpg' })
+			task.addFile({
+				cloud_file: 'https://github.com/image.jpg',
+				filename: 'image.jpg'
+			})
 		).to.be.rejectedWith(
 			ILoveApiError,
 			'Internal Server Error (Status: 500, Code: -1)'
@@ -768,7 +813,10 @@ describe('ILoveIMGApi TaskI.addFile() Tests', function () {
 		const fixedServerSpy2 = sinon.spy(setup.server[2], 'post');
 		task._setServer(setup.server[2]);
 		await expect(
-			task.addFile({ cloud_file: 'https://github.com/image.jpg' })
+			task.addFile({
+				cloud_file: 'https://github.com/image.jpg',
+				filename: 'image.jpg'
+			})
 		).to.be.rejectedWith(
 			ILoveApiError,
 			'Unknown API error occurred. (Status: 400, Code: -1)'
@@ -780,7 +828,10 @@ describe('ILoveIMGApi TaskI.addFile() Tests', function () {
 		const fixedServerSpy3 = sinon.spy(setup.server[3], 'post');
 		task._setServer(setup.server[3]);
 		await expect(
-			task.addFile({ cloud_file: 'https://github.com/image.jpg' })
+			task.addFile({
+				cloud_file: 'https://github.com/image.jpg',
+				filename: 'image.jpg'
+			})
 		).to.be.rejectedWith(
 			ILoveApiError,
 			'Unknown API error occurred. (Status: 422, Code: -1)'
