@@ -97,7 +97,9 @@ class Task {
 			this.#server.defaults.headers['Authorization'] = `Bearer ${token}`;
 			const response = isDebug
 				? await this.#server.get(`/download/${this.#task_id}?debug=true`)
-				: await this.#server.get(`/download/${this.#task_id}`);
+				: await this.#server.get(`/download/${this.#task_id}`, {
+						responseType: 'stream'
+					});
 
 			if (isDebug) {
 				return response.data;
