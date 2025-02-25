@@ -76,4 +76,4 @@ jobs:
         env: 
           ILOVEAPI_PUBLIC_KEY: ${{ secrets.ILOVEAPI_PUBLIC_KEY }}
           ILOVEAPI_SECRET_KEY: ${{ secrets.ILOVEAPI_SECRET_KEY }}
-        run: npm run test
+        run: npm run coverage
