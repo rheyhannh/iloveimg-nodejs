@@ -1,0 +1,9 @@
+{
+	"all": true,
+	"extension": [".js"],
+	"include": ["src/**/*.js"],
+	"exclude": ["test/**", "node_modules/**"],
+	"reporter": ["text", "lcov"],
+	"report-dir": "./.coverage",
+	"temp-dir": "./.nyc"
+}
