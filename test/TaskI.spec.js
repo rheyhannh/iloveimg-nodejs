@@ -2197,6 +2197,163 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 		).to.be.rejectedWith(ZodError);
 	});
 
+	it('should throw ZodError when some attribute of compressimage toolOptions are invalid', async function () {
+		// Use internal method to override private field
+		task._setTaskId('stubed-task_id');
+		task._setServer('stubed-server');
+		task._setUploadedFiles([
+			{
+				server_filename: 'loremipsumdolorsitamet.jpg',
+				filename: 'lorem.jpg'
+			}
+		]);
+		task._setTool('compressimage');
+
+		// Expect ZodError when type of toolOptions itself are invalid.
+		await expect(task.process(undefined, null)).to.be.rejectedWith(ZodError);
+
+		await expect(task.process(undefined, 1)).to.be.rejectedWith(ZodError);
+
+		await expect(task.process(undefined, 'lorem')).to.be.rejectedWith(ZodError);
+
+		await expect(task.process(undefined, false)).to.be.rejectedWith(ZodError);
+
+		// Expect ZodError when some attribute of compressimage toolOptions are invalid.
+		await expect(
+			task.process(undefined, { compression_level: null })
+		).to.be.rejectedWith(ZodError);
+
+		await expect(
+			task.process(undefined, { compression_level: 1 })
+		).to.be.rejectedWith(ZodError);
+
+		await expect(
+			task.process(undefined, { compression_level: true })
+		).to.be.rejectedWith(ZodError);
+
+		await expect(
+			task.process(undefined, { compression_level: 'lorem' })
+		).to.be.rejectedWith(ZodError);
+	});
+
+	it('should throw ZodError when some attribute of cropimage toolOptions are invalid', async function () {
+		// Use internal method to override private field
+		task._setTaskId('stubed-task_id');
+		task._setServer('stubed-server');
+		task._setUploadedFiles([
+			{
+				server_filename: 'loremipsumdolorsitamet.jpg',
+				filename: 'lorem.jpg'
+			}
+		]);
+		task._setTool('cropimage');
+
+		// Expect ZodError when type of toolOptions itself are invalid.
+		await expect(task.process(undefined, null)).to.be.rejectedWith(ZodError);
+
+		await expect(task.process(undefined, 1)).to.be.rejectedWith(ZodError);
+
+		await expect(task.process(undefined, 'lorem')).to.be.rejectedWith(ZodError);
+
+		await expect(task.process(undefined, false)).to.be.rejectedWith(ZodError);
+
+		// Expect ZodError when some attribute of cropimage toolOptions are invalid.
+		await expect(task.process(undefined, { width: 55 })).to.be.rejectedWith(
+			ZodError
+		);
+
+		await expect(task.process(undefined, { height: 125 })).to.be.rejectedWith(
+			ZodError
+		);
+
+		await expect(task.process(undefined, { width: null })).to.be.rejectedWith(
+			ZodError
+		);
+
+		await expect(
+			task.process(undefined, { height: undefined })
+		).to.be.rejectedWith(ZodError);
+
+		await expect(task.process(undefined, { width: '35' })).to.be.rejectedWith(
+			ZodError
+		);
+
+		await expect(task.process(undefined, { height: [] })).to.be.rejectedWith(
+			ZodError
+		);
+
+		await expect(
+			task.process(undefined, { width: 100, height: 50, x: null })
+		).to.be.rejectedWith(ZodError);
+
+		await expect(
+			task.process(undefined, { width: 100, height: 50, y: 'lorem' })
+		).to.be.rejectedWith(ZodError);
+
+		await expect(
+			task.process(undefined, { width: 100, height: 50, x: [] })
+		).to.be.rejectedWith(ZodError);
+
+		await expect(
+			task.process(undefined, { width: 100, height: 50, y: {} })
+		).to.be.rejectedWith(ZodError);
+	});
+
+	it('should throw ZodError when some attribute of resizeimage toolOptions are invalid', async function () {
+		// Use internal method to override private field
+		task._setTaskId('stubed-task_id');
+		task._setServer('stubed-server');
+		task._setUploadedFiles([
+			{
+				server_filename: 'loremipsumdolorsitamet.jpg',
+				filename: 'lorem.jpg'
+			}
+		]);
+		task._setTool('resizeimage');
+
+		// Expect ZodError when type of toolOptions itself are invalid.
+		await expect(task.process(undefined, null)).to.be.rejectedWith(ZodError);
+
+		await expect(task.process(undefined, 1)).to.be.rejectedWith(ZodError);
+
+		await expect(task.process(undefined, 'lorem')).to.be.rejectedWith(ZodError);
+
+		await expect(task.process(undefined, false)).to.be.rejectedWith(ZodError);
+
+		// Expect ZodError when some attribute of resizeimage toolOptions are invalid.
+		await expect(
+			task.process(undefined, { resize_mode: 'lorem' })
+		).to.be.rejectedWith(ZodError);
+
+		await expect(
+			task.process(undefined, { pixels_width: 10 })
+		).to.be.rejectedWith(ZodError);
+
+		await expect(
+			task.process(undefined, { pixels_height: 15 })
+		).to.be.rejectedWith(ZodError);
+
+		await expect(
+			task.process(undefined, { resize_mode: 'percentage' })
+		).to.be.rejectedWith(ZodError);
+
+		await expect(
+			task.process(undefined, {
+				pixels_width: 10,
+				pixels_height: 15,
+				maintain_ratio: {}
+			})
+		).to.be.rejectedWith(ZodError);
+
+		await expect(
+			task.process(undefined, {
+				pixels_width: 10,
+				pixels_height: 15,
+				no_enlarge_if_smaller: []
+			})
+		).to.be.rejectedWith(ZodError);
+	});
+
 	it('should use correct generic options from options param', async function () {
 		// This test ensure validator function are called and used options are validated.
 		// Use internal method to override private field
