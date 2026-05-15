@@ -1850,6 +1850,8 @@ describe('ILoveIMGApi TaskI.process() Tests', function () {
 		);
 	});
 
+	// TODO: Add test case for toolOptions properties that assign default value.
+
 	it('should throw ZodError when some attribute of convertimage toolOptions are invalid', async function () {
 		// Use internal method to override private field
 		task._setTaskId('stubed-task_id');
