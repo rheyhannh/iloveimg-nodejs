@@ -9,6 +9,9 @@ A Node.js library for interacting with the [ILoveIMG API](https://www.iloveapi.c
   - `upscaleimage`  
   - `watermarkimage`  
   - `removebackgroundimage`
+  - `compressimage`
+  - `cropimage`
+  - `resizeimage`
 - It only supports uploading or adding images from a public URL, so you need to use an image or storage provider that can serve your image publicly.
 - Some implementations in this library **may differ** from ILoveApi's official library behavior.
 - You may need to read and understand how their API [request workflows](https://www.iloveapi.com/docs/api-reference#request-workflow) works first.
