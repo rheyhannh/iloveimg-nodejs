@@ -213,7 +213,7 @@ class TaskI {
 	/**
 	 * Process this task.
 	 * @param {TaskSchema.TaskProcessGenericOptionsInfered} [options] Generic options for processing task.
-	 * @param {TaskSchema.TaskProcessWatermarkImageOptionsInfered | TaskSchema.TaskProcessConvertImageOptionsInfered | TaskSchema.TaskProcessUpscaleImageOptionsInfered} [toolOptions] Options for specific tool. Please note that some tool has required options you must fill otherwise it will throw, see tool options from {@link https://www.iloveapi.com/docs/api-reference#resizeimage-extra-parameters here}.
+	 * @param {TaskSchema.TaskProcessWatermarkImageOptionsInfered | TaskSchema.TaskProcessConvertImageOptionsInfered | TaskSchema.TaskProcessUpscaleImageOptionsInfered | TaskSchema.TaskProcessCompressImageOptionsInfered | TaskSchema.TaskProcessCropImageOptionsInfered | TaskSchema.TaskProcessResizeImageOptionsInfered} [toolOptions] Options for specific tool. Please note that some tool has required options you must fill otherwise it will throw, see tool options from {@link https://www.iloveapi.com/docs/api-reference#resizeimage-extra-parameters here}.
 	 * @returns {Promise<TaskSchema.TaskProcessReturnTypeInfered>} Processed file meta information. If `debug` is enabled, it resolves with an object containing request information instead.
 	 * @throws {Error} If requests failed, task id and server are not resolved, no file to process.
 	 * @throws {import('zod').ZodError} If required options or toolOptions are missing or invalid.

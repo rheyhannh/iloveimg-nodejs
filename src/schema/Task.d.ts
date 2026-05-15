@@ -515,6 +515,74 @@ export type TaskProcessWatermarkImageOptionsInfered = {
 
 export declare const TaskProcessWatermarkImageOptions: z.ZodType<TaskProcessWatermarkImageOptionsInfered>;
 
+export type TaskProcessCompressImageOptionsInfered = {
+	/**
+	 * Compression level.
+	 * - `extreme`: Extreme compression.
+	 * - `recommended`: Recommended compression (default).
+	 * - `low`: Low compression.
+	 */
+	compression_level?: 'extreme' | 'recommended' | 'low';
+};
+
+export declare const TaskProcessCompressImageOptions: z.ZodType<TaskProcessCompressImageOptionsInfered>;
+
+export type TaskProcessCropImageOptionsInfered = {
+	/**
+	 * Width in pixels of the area to crop.
+	 */
+	width: number;
+	/**
+	 * Height in pixels of the area to crop.
+	 */
+	height: number;
+	/**
+	 * Horizontal point where start to crop.
+	 * - Default: `0`
+	 */
+	x?: number;
+	/**
+	 * Vertical point where start to crop.
+	 * - Default: `0`
+	 */
+	y?: number;
+};
+
+export declare const TaskProcessCropImageOptions: z.ZodType<TaskProcessCropImageOptionsInfered>;
+
+export type TaskProcessResizeImageOptionsInfered = {
+	/**
+	 * Resize mode that can be one of:
+	 * - `pixels`: Resize will be set using pixels (default).
+	 * - `percentage`: Resize will be set as a percentage of the original image.
+	 */
+	resize_mode?: 'pixels' | 'percentage';
+	/**
+	 * Width in pixels of the resized image, required when `resize_mode` are **pixels**.
+	 */
+	pixels_width?: number;
+	/**
+	 * Height in pixels of the resized image, required when `resize_mode` are **pixels**.
+	 */
+	pixels_height?: number;
+	/**
+	 * Percentage value to resize, required when `resize_mode` are **percentage**.
+	 */
+	percentage?: number;
+	/**
+	 * When `true`, resize will keep aspect ratio and images will not be distort.
+	 * - Default: `true`
+	 */
+	maintain_ratio?: boolean;
+	/**
+	 * Controls if the image can be bigger than the original on resize.
+	 * - Default: `true`
+	 */
+	no_enlarge_if_smaller?: boolean;
+};
+
+export declare const TaskProcessResizeImageOptions: z.ZodType<TaskProcessResizeImageOptionsInfered>;
+
 export type TaskProcessToolOptionsInfered = {
 	/** When tool type are `convertimage`, this options are optional. */
 	convertimage?: TaskProcessConvertImageOptionsInfered;
@@ -524,6 +592,12 @@ export type TaskProcessToolOptionsInfered = {
 	upscaleimage: TaskProcessUpscaleImageOptionsInfered;
 	/** When tool type are `watermarkimage`, some options are required. */
 	watermarkimage: TaskProcessWatermarkImageOptionsInfered;
+	/** When tool type are `compressimage`, this options are optional. */
+	compressimage?: TaskProcessCompressImageOptionsInfered;
+	/** When tool type are `cropimage`, some options are required. */
+	cropimage: TaskProcessCropImageOptionsInfered;
+	/** When tool type are `resizeimage`, some options are required. */
+	resizeimage: TaskProcessResizeImageOptionsInfered;
 };
 
 export declare const TaskProcessToolOptions: z.ZodType<TaskProcessToolOptionsInfered>;

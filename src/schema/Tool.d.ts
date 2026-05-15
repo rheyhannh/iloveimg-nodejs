@@ -4,6 +4,9 @@ export type ToolTypesInfered =
 	| 'convertimage'
 	| 'removebackgroundimage'
 	| 'upscaleimage'
-	| 'watermarkimage';
+	| 'watermarkimage'
+	| 'compressimage'
+	| 'cropimage'
+	| 'resizeimage' ;
 
 export declare const ToolTypes: z.ZodType<ToolTypesInfered>;

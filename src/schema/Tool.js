@@ -7,5 +7,8 @@ export const ToolTypes = z.enum([
 	'convertimage',
 	'removebackgroundimage',
 	'upscaleimage',
-	'watermarkimage'
+	'watermarkimage',
+	'compressimage',
+	'cropimage',
+	'resizeimage'
 ]);

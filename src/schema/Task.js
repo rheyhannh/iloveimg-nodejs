@@ -583,6 +583,96 @@ export const TaskProcessWatermarkImageOptions = z.object({
 });
 
 /**
+ * @typedef {z.infer<typeof TaskProcessCompressImageOptions>} TaskProcessCompressImageOptionsInfered
+ */
+export const TaskProcessCompressImageOptions = z
+	.object({
+		/**
+		 * Compression level.
+		 * - `extreme`: Extreme compression.
+		 * - `recommended`: Recommended compression (default).
+		 * - `low`: Low compression.
+		 */
+		compression_level: z
+			.enum(['extreme', 'recommended', 'low'])
+			.optional()
+			.default('recommended')
+	})
+	.optional();
+
+/**
+ * @typedef {z.infer<typeof TaskProcessCropImageOptions>} TaskProcessCropImageOptionsInfered
+ */
+export const TaskProcessCropImageOptions = z.object({
+	/**
+	 * Width in pixels of the area to crop.
+	 */
+	width: z.number(),
+	/**
+	 * Height in pixels of the area to crop.
+	 */
+	height: z.number(),
+	/**
+	 * Horizontal point where start to crop.
+	 * - Default: `0`
+	 */
+	x: z.number().optional().default(0),
+	/**
+	 * Vertical point where start to crop.
+	 * - Default: `0`
+	 */
+	y: z.number().optional().default(0)
+});
+
+/**
+ * @typedef {z.infer<typeof TaskProcessResizeImageOptions>} TaskProcessResizeImageOptionsInfered
+ */
+export const TaskProcessResizeImageOptions = z
+	.object({
+		/**
+		 * Resize mode that can be one of:
+		 * - `pixels`: Resize will be set using pixels (default).
+		 * - `percentage`: Resize will be set as a percentage of the original image.
+		 */
+		resize_mode: z.enum(['pixels', 'percentage']).optional().default('pixels'),
+		/**
+		 * Width in pixels of the resized image, required when `resize_mode` are **pixels**.
+		 */
+		pixels_width: z.number().optional(),
+		/**
+		 * Height in pixels of the resized image, required when `resize_mode` are **pixels**.
+		 */
+		pixels_height: z.number().optional(),
+		/**
+		 * Percentage value to resize, required when `resize_mode` are **percentage**.
+		 */
+		percentage: z.number().optional(),
+		/**
+		 * When `true`, resize will keep aspect ratio and images will not be distort.
+		 * - Default: `true`
+		 */
+		maintain_ratio: z.boolean().optional().default(true),
+		/**
+		 * Controls if the image can be bigger than the original on resize.
+		 * - Default: `true`
+		 */
+		no_enlarge_if_smaller: z.boolean().optional().default(true)
+	})
+	.refine(
+		(data) => {
+			if (data.resize_mode === 'pixels')
+				return !!data.pixels_width && !!data.pixels_height;
+			if (data.resize_mode === 'percentage') return !!data.percentage;
+			return true;
+		},
+		{
+			message:
+				'pixels_width and pixels_height is required when resize_mode is pixels, percentage is required when resize_mode is percentage',
+			path: ['resize_mode']
+		}
+	);
+
+/**
  * @typedef {z.infer<typeof TaskProcessToolOptions>} TaskProcessToolOptionsInfered
  */
 export const TaskProcessToolOptions = z.object({
@@ -593,5 +683,11 @@ export const TaskProcessToolOptions = z.object({
 	/** When tool type are `upscaleimage`, some options are required. */
 	upscaleimage: TaskProcessUpscaleImageOptions,
 	/** When tool type are `watermarkimage`, some options are required. */
-	watermarkimage: TaskProcessWatermarkImageOptions
+	watermarkimage: TaskProcessWatermarkImageOptions,
+	/** When tool type are `compressimage`, this options are optional. */
+	compressimage: TaskProcessCompressImageOptions,
+	/** When tool type are `cropimage`, some options are required. */
+	cropimage: TaskProcessCropImageOptions,
+	/** When tool type are `resizeimage`, some options are required. */
+	resizeimage: TaskProcessResizeImageOptions
 });
